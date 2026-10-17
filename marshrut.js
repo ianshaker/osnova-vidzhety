@@ -3,7 +3,7 @@ const D=document,mr=c||D.getElementById('mr'),N={},o=M.otTebya||0,Z=M.zadacha,Q=
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
-ln=(i,t,c='')=>t?d('ln '+c,ic(i)+`<span>${e(t)}</span>`):'',
+ln=(i,t,c='',n='')=>t?d('ln '+c,ic(i)+`<span${n&&` title="${e(t)}"`}>${e(t)}</span>`):'',
 bt=(a,i,t,x,g)=>`<button class="bn${g?' ok':''}" data-a=${a} data-t="${e(x)}">${i?ic(i):''}<span>${e(t)}</span></button>`,
 R={sborshchik:'search',ispolnitel:'tool',mekhanik:'rocket',razvedchik:'world',proveryayushchiy:'eye',opus:'brain'},
 T={sonnet:['Sonnet','sey'],opus:['Opus','zhdet'],haiku:['Haiku','da']},
@@ -23,6 +23,11 @@ return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d
 dl=ln('arrow-right',M.dalshe),C=o.zapustit,P=o.kopirovat,
 ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',o.kuda&&'вставь '+o.kuda+' (⌘V)')):'')+(o.knopka?bt('kn','',o.knopka,o.prompt||o.knopka):'')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
+const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
+tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть ▴':'Весь маршрут ▾'}</button>`,
+er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
+F=d('zh',(mn?d('ln',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`+tg(!1))+(V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'')+er+(vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1));
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
 #mr *{box-sizing:border-box}
@@ -44,7 +49,7 @@ mr.innerHTML=`<style>
 .h,.x{overflow:hidden;columns:1;column-gap:0;column-fill:auto;overflow-wrap:break-word}
 .h{font-weight:500;line-height:18px;height:37px}
 .x{font-size:12px;line-height:17px;height:52px}
-.g,.pn button{cursor:pointer;height:20px;padding:0 8px;line-height:1;font-size:11px;border-radius:10px}
+.g,.pn button,.tg{cursor:pointer;height:20px;padding:0 8px;line-height:1;font-size:11px;border-radius:10px}
 .g{position:absolute;right:7px;bottom:-10px;background:var(--surface-2)}
 .w{display:flex;align-items:start;gap:10px}
 .w .c{margin-top:9px;flex:none}
@@ -73,8 +78,20 @@ mr.innerHTML=`<style>
 .er{background:var(--bg-danger);color:var(--text-danger);border:0;font-weight:500}
 ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');return`.${k}{--c:var(--text-${t});--b:var(--bg-${t});--r:var(--border-${t});--d:solid}`}).join('\n')}
 .no{--c:var(--text-danger);--b:var(--bg-danger);color:var(--c)}
-</style>`+d('zh',ln('target','задача')+d('zd'+(Z?'':' no'),Z?e(Z):'Задача Яна не записана — поле zadacha')+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+(nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'')+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas)+ot;
-const lay=()=>{const box=Q('.pt');if(!box)return;
+.mc{display:grid;gap:6px;padding:10px 14px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-1)}
+.mc>*{min-width:0}
+.mc span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mt{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500}
+.tg{flex:none;height:24px;margin-left:auto;padding:0 10px;font-size:12px;border-radius:12px;white-space:nowrap;background:var(--surface-2)}
+.sg{display:flex;gap:3px}
+.sg i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
+.sg .sey{flex:2}
+.ln.sey{color:var(--text-accent)}
+.fv{display:none;gap:20px}
+.mo .fv{display:grid}
+.mo .mc{display:none}
+</style>`+(mn?mc+d('fv',F+(o?'':ot))+(o?ot:''):F+ot);
+const lay=()=>{const box=Q('.pt');if(!box||!box.clientWidth)return;
 const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
 let r=1,c=0,f=1;
@@ -87,6 +104,7 @@ return`<path class="${V[j].s=='da'?'sp':''}" d="M${x} ${y}${Math.abs(y-Y)<2?'':`
 A('.pl').forEach(t=>{const q=[...t.children],n=Math.max(...q.map(b=>Math.round(b.scrollWidth/b.clientWidth))),g=Q('.g',t);
 if(g?g.dataset.n==n:n<2)return;g?.remove();q.forEach(b=>b.scrollLeft=0);if(n>1)t.insertAdjacentHTML('beforeend',`<button class=g data-a=g data-n=${n}>1/${n} ›</button>`)})};
 mr.onclick=async ev=>{const b=ev.target.closest('[data-a]'),a=b?.dataset.a;if(!a)return;
+if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.zh .tg':'.mc .tg').focus();return}
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(a=='g'){const n=+b.dataset.n,p=b.p=((b.p||0)+1)%n;[...b.parentNode.children].forEach(q=>q.scrollLeft=p*q.clientWidth);b.textContent=`${p+1}/${n} ${p+1<n?'›':'‹'}`;return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
