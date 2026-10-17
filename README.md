@@ -1,5 +1,5 @@
 # osnova-vidzhety
 
-Библиотека виджета «маршрут» для show_widget в Claude.
+Библиотека виджетов для show_widget в Claude: Marshrut, Vybor, Otvet, Status, Uborka.
 
-Подключение: <script src="https://cdn.jsdelivr.net/gh/ianshaker/osnova-vidzhety@v1/marshrut.js"></script>, затем Marshrut({...данные...}).
+Подключение: <script src="https://cdn.jsdelivr.net/gh/ianshaker/osnova-vidzhety@v2/vidzhety.js"></script>, затем вызов нужной функции с данными.

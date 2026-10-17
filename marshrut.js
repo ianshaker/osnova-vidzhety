@@ -1,5 +1,5 @@
-window.Marshrut=M=>{
-const D=document,mr=D.getElementById('mr'),N={},o=M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
+window.Marshrut=(M,c)=>{
+const D=document,mr=c||D.getElementById('mr'),N={},o=M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
