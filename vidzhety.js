@@ -24,9 +24,9 @@ dl=ln('arrow-right',M.dalshe),C=o.zapustit,P=o.kopirovat,
 ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',o.kuda&&'вставь '+o.kuda+' (⌘V)')):'')+(o.knopka?bt('kn','',o.knopka,o.prompt||o.knopka):'')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
-tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть ▴':'Весь маршрут ▾'}</button>`,
+tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
-F=d('zh',(mn?d('ln',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+F=d('zh',(mn?d('ln ct',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
 mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`+tg(!1))+(V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'')+er+(vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1));
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
@@ -78,11 +78,13 @@ mr.innerHTML=`<style>
 .er{background:var(--bg-danger);color:var(--text-danger);border:0;font-weight:500}
 ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');return`.${k}{--c:var(--text-${t});--b:var(--bg-${t});--r:var(--border-${t});--d:solid}`}).join('\n')}
 .no{--c:var(--text-danger);--b:var(--bg-danger);color:var(--c)}
-.mc{display:grid;gap:6px;padding:10px 14px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-1)}
+.mc{display:grid;gap:6px;padding:10px 14px;border-radius:12px;background:var(--surface-1);box-shadow:inset 0 0 0 .5px var(--border-strong);line-height:18px}
 .mc>*{min-width:0}
 .mc span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mt{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500}
-.tg{flex:none;height:24px;margin-left:auto;padding:0 10px;font-size:12px;border-radius:12px;white-space:nowrap;background:var(--surface-2)}
+.tg{display:inline-flex;align-items:center;gap:4px;flex:none;height:28px;margin-left:auto;padding:0 8px 0 12px;font-size:12px;border:.5px solid var(--border-accent);border-radius:14px;white-space:nowrap;background:var(--bg-accent);color:var(--text-accent)}
+.tg i,.ct i{margin:0;font-size:14px}
+.ct{align-items:center}
 .sg{display:flex;gap:3px}
 .sg i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
 .sg .sey{flex:2}
@@ -234,13 +236,13 @@ spisok:B=>d('o-ls',(B.e||[]).map((s,i)=>{const[t,p,c]=[].concat(s);return d('o-r
 pm=(v,k,c)=>h(k)?d('o-ln '+c,(v[k]?ic(k):'')+sx(k[0],2,v[k])):'';
 return`<div class="o-cs o-gp" style="--w:180px${h('sovet')?';padding-top:10px':''}">`+V.map(v=>d('o-k o-u'+(v.sovet?' o-s':''),(v.sovet?`<span class="o-bd">${ic('thumb-up')}советую</span>`:'')+sx('t',2,v.n,'o-t')+(h('d')?sx('d',3,v.d):'')+pm(v,'plus','o-gr')+pm(v,'minus','o-rd')+(v.knopka?bt(v.knopka,v.prompt,v.sovet?'':'o-q'):''))).join('')+'</div>'},
 shagi:B=>{const S=(B.e||[]).map(s=>[].concat(s)),h=S.some(s=>s[1]);
-return d('o-sh o-gp',S.map(([t,p,m],i)=>(i?ic('arrow-right','o-ar'):'')+d('o-k o-u',d('o-st',`<b class="o-c">${i+1}</b>`+(MD[m]?`<b class="o-md o-${MD[m][1]}" title="${MD[m][0]}">${MD[m][0][0]}</b>`:'')+sx('t',2,t,'o-t'))+(h?sx('p',2,p):''))).join(''))},
+return d('o-sh o-gp',S.map(([t,p,m],i)=>(i?ic('arrow-right','o-ar'):'')+d('o-k o-u',d('o-st',`<b class="o-c">${i+1}</b>`+(MD[m]?`<b class="o-md o-${MD[m][1]}" title="${MD[m][0]}">${MD[m][0][0]}</b>`:''))+sx('t',2,t,'o-t')+(h?sx('p',2,p):''))).join(''))},
 stroka:B=>ln(B.i||'info-circle',B.t,tn(B.ton))
 },
 bk=B=>d('o-bk',(B.n?d('o-n',e(B.n)):'')+(BL[B.b]?BL[B.b](B):d('o-er','блок «'+e(B.b)+'» не из списка'))),
 Z=ZT[D.ton];
 ot.innerHTML=`<style>
-#ot{display:grid;gap:14px;font-size:13px;line-height:18px;overflow-wrap:break-word;container-type:inline-size}
+#ot{display:grid;gap:14px;font-size:13px;line-height:18px;overflow-wrap:break-word;hyphens:auto;hyphenate-limit-chars:9 4 4;container-type:inline-size}
 #ot *{box-sizing:border-box}
 .o-z{display:flex;gap:10px;align-items:start;font-size:20px;line-height:28px;font-weight:500}
 .o-zn,.o-c,.o-md{display:grid;place-items:center;flex:none;border-radius:50%;background:var(--b,var(--surface-2));color:var(--c,var(--text-muted))}
@@ -257,7 +259,7 @@ ot.innerHTML=`<style>
 .o-x{flex:none;overflow:hidden;columns:1;column-gap:0;column-fill:auto;height:calc(var(--n,1)*18px)}
 .o-t{font-size:14px;font-weight:500}
 .o-cp,.o-p{color:var(--text-secondary)}
-.o-g{position:absolute;right:8px;bottom:-10px;height:20px;padding:0 8px;line-height:1;font-size:11px;border-radius:10px;background:var(--surface-2);cursor:pointer}
+.o-g{grid-column:1/-1;justify-self:end;align-self:flex-end;height:18px;padding:0 8px;line-height:1;font-size:11px;border-radius:9px;background:var(--surface-2);cursor:pointer}
 .o-v{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 6px;margin-top:auto}
 .o-v span{font-size:14px;color:var(--text-muted)}
 .o-v i{align-self:center;color:var(--text-muted)}
@@ -265,10 +267,10 @@ ot.innerHTML=`<style>
 .o-bd{position:absolute;top:-10px;left:10px;display:inline-flex;gap:4px;align-items:center;height:20px;padding:0 8px;border-radius:10px;font-size:11px;background:var(--fill-accent);color:var(--on-accent)}
 .o-ln{display:flex;gap:6px;align-items:start;color:var(--text-secondary)}
 .o-ln i{flex:none;margin-top:2px;color:var(--c,var(--text-secondary))}
-.o-ln span,.o-ln .o-x,.o-st .o-x,.o-r>div{flex:1;min-width:0}
-.o-st .o-x,.o-r>div{margin-top:2px}
+.o-ln span,.o-ln .o-x,.o-r>div{flex:1;min-width:0}
+.o-r>div{margin-top:2px}
 .o-sl{color:var(--c,var(--text-secondary))}
-.o-st{display:flex;gap:6px;align-items:start}
+.o-st{display:flex;gap:6px;align-items:center}
 .o-sh{display:flex;gap:6px}
 .o-sh>.o-k{flex:1}
 .o-ar{flex:none;align-self:center;color:var(--text-muted)}
@@ -286,12 +288,12 @@ ot.innerHTML=`<style>
 ${['gr:success','rd:danger','yl:warning','bl:accent'].map(x=>{const[k,t]=x.split(':');return`.o-${k}{--c:var(--text-${t});--b:var(--bg-${t})}`}).join('\n')}
 @container (max-width:460px){.o-z{font-size:18px}.o-bs{grid-template-columns:1fr}.o-sh{flex-direction:column}.o-sh>.o-k{flex:none}.o-ar{transform:rotate(90deg);justify-self:center}}
 </style>`+(D.zag?d('o-z',(Z?`<span class="o-zn o-${Z[0]}">${ic(Z[1])}</span>`:'')+`<span>${e(D.zag)}</span>`):'')+(D.bloki||[]).filter(Boolean).map(bk).join('');
-ot.role='region';ot.ariaLabel=D.zag||'Ответ';
+ot.role='region';ot.lang='ru';ot.ariaLabel=D.zag||'Ответ';
 const lay=()=>{const X=A('.o-x');A('.o-gp').forEach(g=>g.m={});
 X.forEach(s=>s.style.height='auto');
-X.forEach(s=>{const m=s.closest('.o-gp').m,k=s.dataset.k;m[k]=Math.max(m[k]||1,Math.round(s.scrollHeight/18))});
-X.forEach(s=>{s.style.height='';s.style.setProperty('--n',Math.min(s.closest('.o-gp').m[s.dataset.k],s.dataset.m))});
-A('.o-u').forEach(u=>{const q=A('.o-x',u),n=Math.max(...q.map(b=>Math.round(b.scrollWidth/b.clientWidth))),g=u.querySelector(':scope>.o-g');
+X.forEach(s=>{const m=s.closest('.o-gp').m,k=s.dataset.k;m[k]=Math.max(m[k]||1,s.l=Math.round(s.scrollHeight/18))});
+X.forEach(s=>{s.style.height='';s.style.setProperty('--n',s.c=Math.min(s.closest('.o-gp').m[s.dataset.k],s.dataset.m))});
+A('.o-u').forEach(u=>{const q=A('.o-x',u),n=Math.max(...q.map(b=>Math.ceil(b.l/b.c))),g=u.querySelector(':scope>.o-g');
 if(g?g.dataset.n==n:n<2)return;g?.remove();q.forEach(b=>b.scrollLeft=0);if(n>1)u.insertAdjacentHTML('beforeend',`<button class=o-g data-a=g data-n=${n}>1/${n} ›</button>`)})};
 ot.onclick=async ev=>{const b=ev.target.closest('[data-a]'),a=b?.dataset.a;if(!a)return;
 if(a=='g'){const n=+b.dataset.n,p=b.p=((b.p||0)+1)%n;A('.o-x',b.parentNode).forEach(q=>q.scrollLeft=p*q.clientWidth);b.textContent=`${p+1}/${n} ${p+1<n?'›':'‹'}`;return}
@@ -300,7 +302,7 @@ const t=b.dataset.t,fin=s=>{b.classList.add('o-ok');b.lastChild.textContent=s};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — проверь поле ввода')}
 if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
 const r=dc.createElement('textarea');r.className='o-rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')};
-lay();dc.fonts?.ready.then(lay);let W=ot.clientWidth;window.ResizeObserver&&new ResizeObserver(()=>{if(ot.clientWidth!=W){W=ot.clientWidth;lay()}}).observe(ot);Otvet.lay=lay};
+lay();dc.fonts?.ready.then(lay);dc.fonts?.addEventListener('loadingdone',lay);let W=ot.clientWidth;window.ResizeObserver&&new ResizeObserver(()=>{if(ot.clientWidth!=W){W=ot.clientWidth;lay()}}).observe(ot);Otvet.lay=lay};
 window.Status=D=>{
 const W=document,st=W.getElementById('st'),Z=D.zadacha,L=D.sovet,
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
@@ -415,12 +417,13 @@ ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(k,x)=>`<div class="${k}">${x}</div>`,
 ln=(i,t,k='')=>d('ub-ln '+k,ic(i)+`<span>${t}</span>`),
 bl=(i,t,a,f)=>a?.length?d('ub-bl',d('ub-kp',ic(i)+t)+f(a)):'',
-st=(k,a,i,t,x='')=>d('ub-st'+k,`<button id=ub-${i} class=ub-b data-u=${a}>${ic('copy')}<span>${t}</span></button>`+x+d('ub-pod','')),
+st=(a,i,x)=>`<button id=ub-${i} class=ub-b data-u=${a}><span class=ub-c>${ic('check')}</span>${x}</button>`,
+po=a=>`<div class=ub-pod id=ub-p${a}></div>`,
 s=v=>typeof v=='string'&&v.trim(),
 M=U.marshrut,ost=s(U.ostanovilis)&&s(U.prodolzhit),ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
-B={k:['/compact','✓ /compact скопирован — вставь в поле и Enter','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
-f:[U.prodolzhit,'✓ скопировано — вставь первым сообщением','Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
+B={k:['/compact','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
+f:[U.prodolzhit,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
 cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
 try{const a=D.createElement('textarea');a.value=t;a.readOnly=1;a.style.cssText='position:absolute;left:-9999px';D.body.append(a);a.select();const k=D.execCommand('copy');a.remove();return k}catch{}};
 c.innerHTML=`<style>
@@ -435,7 +438,7 @@ c.innerHTML=`<style>
 .ub-kp{display:flex;gap:5px;align-items:center;font-size:12px;color:var(--text-muted)}
 .ub-sp{margin:0;padding-left:22px;font-size:14px;line-height:1.5}
 .ub-sp li::marker{color:var(--ot);font-weight:500}
-.ub-kd,.ub-ost,.ub-ln,.ub-sp,.ub-st{overflow-wrap:anywhere}
+.ub-kd,.ub-ost,.ub-ln,.ub-sp,.ub-t{overflow-wrap:anywhere}
 .ub-kd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px}
 .ub-f{font:12px var(--font-mono);color:var(--text-secondary)}
 .ub-pr{display:flex;flex-wrap:wrap;gap:6px}
@@ -444,20 +447,22 @@ c.innerHTML=`<style>
 .ub-ln>i{margin-top:2px}
 .ub-ln code{font:12px var(--font-mono)}
 .ub-no{background:var(--bg-danger);color:var(--text-danger);font-weight:500}
-.ub-ra,.ub-fr{background:var(--o);color:var(--ot)}
+.ub-ra{background:var(--o);color:var(--ot)}
 .ub-ra{font-weight:500}
 .ub-mr{padding:14px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
 .ub-niz{padding-top:14px;border-top:.5px solid var(--border)}
 .ub-ost{padding:12px 14px;border:1.5px solid var(--of);border-radius:12px}
 .ub-ot{font-size:16px;font-weight:500;line-height:1.4}
-.ub-kak{gap:8px;padding:12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
-.ub-st{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:6px;padding:8px;border:1.5px solid transparent;border-radius:10px}
-.ub-on{border-color:var(--of)}
-.ub-fr{width:100%;padding:8px 11px;border-radius:8px;font-size:14px}
-.ub-b{display:inline-flex;gap:8px;align-items:center;max-width:100%;height:auto;min-height:40px;padding:7px 16px;border:1.5px solid var(--of);border-radius:8px;background:none;color:var(--ot);font-size:14px;font-weight:500;line-height:1.3;text-align:left;white-space:normal;cursor:pointer}
-.ub-on .ub-b{background:var(--of);color:var(--on-accent)}
-.ub-b.gotovo{background:var(--fill-success);color:var(--on-success);border-color:transparent}
-.ub-b.gotovo i{display:none}
+.ub-kak{gap:8px;padding:10px 12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
+.ub-rw{display:flex;flex-wrap:wrap;gap:8px}
+.ub-b{display:flex;gap:8px;align-items:center;min-width:0;height:32px;padding:0 12px 0 8px;border:1px solid var(--of);border-radius:8px;background:var(--o);color:var(--ot);font-size:13px;font-weight:500;line-height:1;text-align:left;cursor:pointer}
+#ub-kn{font-family:var(--font-mono)}
+#ub-kf{flex:1 1 300px}
+.ub-b>i{flex:none;font-size:14px}
+.ub-c{display:grid;place-items:center;flex:none;width:16px;height:16px;border:1.5px dashed var(--of);border-radius:50%;font-size:11px;opacity:.6}
+.gotovo .ub-c{border-style:solid;border-color:var(--fill-success);background:var(--fill-success);color:var(--on-success);opacity:1}
+.ub-l{flex:none;white-space:nowrap}
+.ub-t{flex:1;min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px;font-weight:400;line-height:14px;color:var(--text-secondary)}
 .ub-pod{font-size:12px;color:var(--text-secondary)}
 .ub-pod:empty{display:none}
 .ub-rn{width:100%;min-height:56px;font-size:14px}
@@ -470,11 +475,10 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
-(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+d('ub-ot',e(U.ostanovilis)))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):ok?st(' ub-on','k','kn','1 · Скопировать /compact'):'')+st('','f','kf','2 · После сжатия — скопировать «с чего продолжить»',d('ub-fr',e(U.prodolzhit)))):ln('alert-triangle','Не написано, где остановились и с чего продолжить — заполни ostanovilis и prodolzhit. Без них сжимать рано','ub-no')));
+(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+d('ub-ot',e(U.ostanovilis)))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(U.prodolzhit)}">${e(U.prodolzhit)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились и с чего продолжить — заполни ostanovilis и prodolzhit. Без них сжимать рано','ub-no')));
 c.onclick=async v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
-const[t,o,m]=B[b.dataset.u],g=b.closest('.ub-st'),h=Q('.ub-pod',g),
-fin=(x,y)=>{b.classList.add('gotovo');b.lastChild.textContent=x;h.textContent=y;c.querySelectorAll('.ub-st').forEach(z=>z.classList.toggle('ub-on',!Q('.gotovo',z)))};
-if(await cp(t))return fin(o,'');
-let r=Q('.ub-rn',g);if(!r){r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;h.before(r)}
-r.value=t;r.focus();r.select();fin('Выделено — нажми ⌘C',m)};
+const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
+if(await cp(t))return g();
+let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
+r.value=t;r.focus();r.select();h.textContent=m};
 if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};

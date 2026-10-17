@@ -24,9 +24,9 @@ dl=ln('arrow-right',M.dalshe),C=o.zapustit,P=o.kopirovat,
 ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',o.kuda&&'вставь '+o.kuda+' (⌘V)')):'')+(o.knopka?bt('kn','',o.knopka,o.prompt||o.knopka):'')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
-tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть ▴':'Весь маршрут ▾'}</button>`,
+tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
-F=d('zh',(mn?d('ln',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+F=d('zh',(mn?d('ln ct',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
 mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`+tg(!1))+(V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'')+er+(vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1));
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
@@ -78,11 +78,13 @@ mr.innerHTML=`<style>
 .er{background:var(--bg-danger);color:var(--text-danger);border:0;font-weight:500}
 ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');return`.${k}{--c:var(--text-${t});--b:var(--bg-${t});--r:var(--border-${t});--d:solid}`}).join('\n')}
 .no{--c:var(--text-danger);--b:var(--bg-danger);color:var(--c)}
-.mc{display:grid;gap:6px;padding:10px 14px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-1)}
+.mc{display:grid;gap:6px;padding:10px 14px;border-radius:12px;background:var(--surface-1);box-shadow:inset 0 0 0 .5px var(--border-strong);line-height:18px}
 .mc>*{min-width:0}
 .mc span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mt{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500}
-.tg{flex:none;height:24px;margin-left:auto;padding:0 10px;font-size:12px;border-radius:12px;white-space:nowrap;background:var(--surface-2)}
+.tg{display:inline-flex;align-items:center;gap:4px;flex:none;height:28px;margin-left:auto;padding:0 8px 0 12px;font-size:12px;border:.5px solid var(--border-accent);border-radius:14px;white-space:nowrap;background:var(--bg-accent);color:var(--text-accent)}
+.tg i,.ct i{margin:0;font-size:14px}
+.ct{align-items:center}
 .sg{display:flex;gap:3px}
 .sg i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
 .sg .sey{flex:2}
