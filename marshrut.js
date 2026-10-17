@@ -43,14 +43,14 @@ mr.innerHTML=`<style>
 .pt{position:relative;display:grid;grid-template-columns:repeat(var(--k,3),1fr);gap:24px 12px;padding:0 14px}
 .sv{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;fill:none;stroke:var(--border-strong);stroke-width:2;stroke-dasharray:5 4}
 .sp{stroke:var(--text-success);stroke-dasharray:0}
-.u{position:relative;z-index:1;display:grid;justify-items:center;gap:7px;min-width:0}
+.u{position:relative;z-index:1;display:grid;grid-template:subgrid/minmax(0,1fr);row-gap:7px;justify-items:center;min-width:0}
 .c{width:30px;height:30px;font-size:15px;border:1.5px var(--d,dashed) var(--r,var(--border-strong))}
-.pl{position:relative;width:100%;padding:7px 9px;display:grid;gap:3px;border:1px var(--d,dashed) var(--r,var(--border-strong));border-radius:8px;background:var(--b,none);color:var(--c,var(--text-muted))}
-.h,.x{overflow:hidden;columns:1;column-gap:0;column-fill:auto;overflow-wrap:break-word}
-.h{font-weight:500;line-height:18px;height:37px}
-.x{font-size:12px;line-height:17px;height:52px}
-.g,.pn button,.tg{cursor:pointer;height:20px;padding:0 8px;line-height:1;font-size:11px;border-radius:10px}
-.g{position:absolute;right:7px;bottom:-10px;background:var(--surface-2)}
+.pl{grid-row:2/span 2;width:100%;padding:7px 9px;display:grid;grid-template:subgrid/minmax(0,1fr);border:1px var(--d,dashed) var(--r,var(--border-strong));border-radius:8px;background:var(--b,none);color:var(--c,var(--text-muted))}
+.h,.x{min-width:0;overflow-wrap:break-word}
+.h{font-weight:500;line-height:18px}
+.x{margin-top:3px;font-size:12px;line-height:17px}
+.x:empty{display:none}
+.pn button,.tg{cursor:pointer;height:20px;padding:0 8px;line-height:1;font-size:11px;border-radius:10px}
 .w{display:flex;align-items:start;gap:10px}
 .w .c{margin-top:9px;flex:none}
 .cd{flex:1;min-width:0;display:grid;gap:9px;padding:12px 14px;border:2px solid var(--border-accent);border-radius:12px;background:var(--surface-2)}
@@ -98,17 +98,14 @@ const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
 let r=1,c=0,f=1;
 U.forEach(u=>{const w=u.classList.contains('w');if(w&&c){r++;c=0;f=!f}
-u.style.gridRow=r;u.style.gridColumn=w?'1/-1':f?c+1:k-c;if(w)u.style.flexDirection=f?'row':'row-reverse';u.f=f;
+u.style.gridRow=r*3-2+'/span 3';u.style.gridColumn=w?'1/-1':f?c+1:k-c;if(w)u.style.flexDirection=f?'row':'row-reverse';u.f=f;
 if(w){r++;c=0}else if(++c==k){r++;c=0;f=!f}});
 const br=rc(box),P=U.map(u=>{const b=rc(Q('.c',u));return[b.left+b.width/2-br.left,b.top+b.height/2-br.top]});
 Q('.sv').outerHTML=`<svg class=sv style="width:${br.width}px;height:${br.height}px">${P.slice(1).map(([X,Y],j)=>{const[x,y]=P[j],v=!U[j+1].f,E=v?br.width-7:7,s=v?1:-1;
-return`<path class="${V[j].s=='da'?'sp':''}" d="M${x} ${y}${Math.abs(y-Y)<2?'':`H${E-s*10}Q${E} ${y} ${E} ${y+10}V${Y-10}Q${E} ${Y} ${E-s*10} ${Y}`}H${X}"/>`}).join('')}</svg>`;
-A('.pl').forEach(t=>{const q=[...t.children],n=Math.max(...q.map(b=>Math.round(b.scrollWidth/b.clientWidth))),g=Q('.g',t);
-if(g?g.dataset.n==n:n<2)return;g?.remove();q.forEach(b=>b.scrollLeft=0);if(n>1)t.insertAdjacentHTML('beforeend',`<button class=g data-a=g data-n=${n}>1/${n} ›</button>`)})};
+return`<path class="${V[j].s=='da'?'sp':''}" d="M${x} ${y}${Math.abs(y-Y)<2?'':`H${E-s*10}Q${E} ${y} ${E} ${y+10}V${Y-10}Q${E} ${Y} ${E-s*10} ${Y}`}H${X}"/>`}).join('')}</svg>`};
 mr.onclick=async ev=>{const b=ev.target.closest('[data-a]'),a=b?.dataset.a;if(!a)return;
 if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.zh .tg':'.mc .tg').focus();return}
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
-if(a=='g'){const n=+b.dataset.n,p=b.p=((b.p||0)+1)%n;[...b.parentNode.children].forEach(q=>q.scrollLeft=p*q.clientWidth);b.textContent=`${p+1}/${n} ${p+1<n?'›':'‹'}`;return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=x=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k')N[st]=x};
 if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — проверь поле ввода')}
