@@ -412,10 +412,14 @@ bl=(i,t,a,f)=>a?.length?d('ub-bl',d('ub-kp',ic(i)+t)+f(a)):'',
 st=(a,i,x)=>`<button id=ub-${i} class=ub-b data-u=${a}><span class=ub-c>${ic('check')}</span>${x}</button>`,
 po=a=>`<div class=ub-pod id=ub-p${a}></div>`,
 s=v=>typeof v=='string'&&v.trim(),
-M=U.marshrut,ost=s(U.ostanovilis)&&s(U.prodolzhit),ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
+tr=v=>v.trim().replace(/[.\s]+$/,''),
+dv=(k,v)=>d('ub-ot',`<span class=ub-ol>${k}</span> ${e(v)}`),
+M=U.marshrut,sa=s(U.ostanovilis),nw=sa&&s(U.dalshe),old=sa&&!nw&&s(U.prodolzhit),
+F=nw?`Продолжаем${s(M?.zadacha)?` «${M.zadacha.trim()}»`:''}. Перед сжатием: ${tr(U.ostanovilis)}. Дальше по маршруту: ${tr(U.dalshe)}.`:old?U.prodolzhit:'',
+ost=!!F,ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
 B={k:['/compact','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
-f:[U.prodolzhit,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
+f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
 cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
 try{const a=D.createElement('textarea');a.value=t;a.readOnly=1;a.style.cssText='position:absolute;left:-9999px';D.body.append(a);a.select();const k=D.execCommand('copy');a.remove();return k}catch{}};
 c.innerHTML=`<style>
@@ -445,6 +449,7 @@ c.innerHTML=`<style>
 .ub-niz{padding-top:14px;border-top:.5px solid var(--border)}
 .ub-ost{padding:12px 14px;border:1.5px solid var(--of);border-radius:12px}
 .ub-ot{font-size:16px;font-weight:500;line-height:1.4}
+.ub-ol{font-weight:400;color:var(--text-secondary)}
 .ub-kak{gap:8px;padding:10px 12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
 .ub-rw{display:flex;flex-wrap:wrap;gap:8px}
 .ub-b{display:flex;gap:8px;align-items:center;min-width:0;height:32px;padding:0 12px 0 8px;border:1px solid var(--of);border-radius:8px;background:var(--o);color:var(--ot);font-size:13px;font-weight:500;line-height:1;text-align:left;cursor:pointer}
@@ -467,7 +472,7 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
-(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+d('ub-ot',e(U.ostanovilis)))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(U.prodolzhit)}">${e(U.prodolzhit)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились и с чего продолжить — заполни ostanovilis и prodolzhit. Без них сжимать рано','ub-no')));
+(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?dv('сделано перед сжатием:',U.ostanovilis)+dv('дальше по маршруту:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
 c.onclick=async v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
 if(await cp(t))return g();
