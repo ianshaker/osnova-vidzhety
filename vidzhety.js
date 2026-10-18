@@ -26,8 +26,9 @@ ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
-F=d('zh',(mn?d('ln ct',ic('target')+'<span>задача</span>'+tg(!0)):ln('target','задача'))+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
-mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`+tg(!1))+(V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'')+er+(vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1));
+F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+rw=[V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'',vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'',ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1)],k=rw.map(x=>!!x).lastIndexOf(!0),
+mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+rw.map((x,i)=>(i==1?er:'')+(i==k?x.replace(/<\/div>$/,tg(!1)+'</div>').replace('"','"bx '):x)).join('')+(k<0?tg(!1):''));
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
 #mr *{box-sizing:border-box}
@@ -83,16 +84,18 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 .mc span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mt{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500}
 .tg{display:inline-flex;align-items:center;gap:4px;flex:none;height:28px;margin-left:auto;padding:0 8px 0 12px;font-size:12px;border:.5px solid var(--border-accent);border-radius:14px;white-space:nowrap;background:var(--bg-accent);color:var(--text-accent)}
-.tg i,.ct i{margin:0;font-size:14px}
-.ct{align-items:center}
+.tg i{margin:0;font-size:14px}
+.bx{align-items:center}
+.bx i{margin:0}
+.sg .tg{margin-left:8px}
 .sg{display:flex;gap:3px}
-.sg i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
+.sg>i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
 .sg .sey{flex:2}
 .ln.sey{color:var(--text-accent)}
 .fv{display:none;gap:20px}
 .mo .fv{display:grid}
 .mo .mc{display:none}
-</style>`+(mn?mc+d('fv',F+(o?'':ot))+(o?ot:''):F+ot);
+</style>`+(mn?mc+d('fv',F+(o?'':ot))+(o?ot:'')+d('fv',tg(!0)):F+ot);
 const lay=()=>{const box=Q('.pt');if(!box||!box.clientWidth)return;
 const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
@@ -104,7 +107,7 @@ const br=rc(box),P=U.map(u=>{const b=rc(Q('.c',u));return[b.left+b.width/2-br.le
 Q('.sv').outerHTML=`<svg class=sv style="width:${br.width}px;height:${br.height}px">${P.slice(1).map(([X,Y],j)=>{const[x,y]=P[j],v=!U[j+1].f,E=v?br.width-7:7,s=v?1:-1;
 return`<path class="${V[j].s=='da'?'sp':''}" d="M${x} ${y}${Math.abs(y-Y)<2?'':`H${E-s*10}Q${E} ${y} ${E} ${y+10}V${Y-10}Q${E} ${Y} ${E-s*10} ${Y}`}H${X}"/>`}).join('')}</svg>`};
 mr.onclick=async ev=>{const b=ev.target.closest('[data-a]'),a=b?.dataset.a;if(!a)return;
-if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.zh .tg':'.mc .tg').focus();return}
+if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.fv .tg':'.mc .tg').focus({preventScroll:1});return}
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=x=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k')N[st]=x};
