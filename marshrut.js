@@ -29,6 +29,7 @@ tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Ве
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
 F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
 rw=[V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'',vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'',ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1)],k=rw.map(x=>!!x).lastIndexOf(!0),
+pl=M.puls&&d('mc pu',d('mt',ic('activity')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+ln('corner-down-right',M.podzadacha)+(M.lyudi||[]).map(row).join('')+(M.prosnus?ln('alarm','проснусь сам в '+M.prosnus):d('er','пульс без будильника — prosnus: ЧЧ:ММ'))),
 mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+rw.map((x,i)=>(i==1?er:'')+(i==k?x.replace(/<\/div>$/,tg(!1)+'</div>').replace('"','"bx '):x)).join('')+(k<0?tg(!1):''));
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
@@ -83,6 +84,9 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 .mc{display:grid;gap:6px;padding:10px 14px;border-radius:12px;background:var(--surface-1);box-shadow:inset 0 0 0 .5px var(--border-strong);line-height:18px}
 .mc>*{min-width:0}
 .mc span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pu .ln span{white-space:normal}
+.pu .mt i{color:var(--text-accent)}
+.pu .l{background:var(--surface-2)}
 .mt{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500}
 .tg{display:inline-flex;align-items:center;gap:4px;flex:none;height:28px;margin-left:auto;padding:0 8px 0 12px;font-size:12px;border:.5px solid var(--border-accent);border-radius:14px;white-space:nowrap;background:var(--bg-accent);color:var(--text-accent)}
 .tg i{margin:0;font-size:14px}
@@ -96,7 +100,7 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 .fv{display:none;gap:20px}
 .mo .fv{display:grid}
 .mo .mc{display:none}
-</style>`+(mn?mc+d('fv',F+(o?'':ot))+(o?ot:'')+d('fv',tg(!0)):F+ot);
+</style>`+(pl?pl+(o?ot:''):mn?mc+d('fv',F+(o?'':ot))+(o?ot:'')+d('fv',tg(!0)):F+ot);
 const lay=()=>{const box=Q('.pt');if(!box||!box.clientWidth)return;
 const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
