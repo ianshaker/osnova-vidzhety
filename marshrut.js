@@ -1,6 +1,7 @@
 window.Marshrut=(M,c)=>{
-const D=document,mr=c||D.getElementById('mr'),N={},o=M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
+const D=document,mr=c||D.getElementById('mr'),N={},o=typeof M.otTebya=='string'?{chto:M.otTebya}:M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
+tk=(v,k='tekst')=>v&&typeof v=='object'?v[k]||'':v,
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
 ln=(i,t,c='',n='')=>t?d('ln '+c,ic(i)+`<span${n&&` title="${e(t)}"`}>${e(t)}</span>`):'',
@@ -17,12 +18,12 @@ row=([r,m,t,s,z])=>{const b=T[m],c=CH[s];
 return d('l',ic(R[r]||'user')+(b?`<b class="${b[1]}" title="${b[0]}">${b[0][0]}</b>`:'')+`<span>${e(t)}${z?`<small>${ic('lock')}${e(z)}</small>`:''}</span>`+(c?`<small class="${c[1]}">${c[0]}</small>`:''))},
 card=()=>{const x=sh[st],K=x?.knopka;
 return d('tp',d('tt',e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.length>1?d('pn',sh.map((y,i)=>`<button data-a=s data-i=${i}${i==st?' class=bn':''}>${y.s=='da'?'✓':i+1}</button>`).join('')):''))+
-d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(T[l[1]]?l:['','',l[0]+': '+l[1],l[2],l[3]])).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||K.tekst||'Делай',K.prompt||K.tekst||'делай',N[st]):''):''))},
+d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(T[l[1]]?l:['','',l[0]+': '+l[1],l[2],l[3]])).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||tk(K)||'Делай',tk(K,'prompt')||tk(K)||'делай',N[st]):''):''))},
 nd=(v,i)=>{const c=`<b class="c ${v==vs?'sey':''}">${ic({da:'check',sey:'circle-dot',zhdet:'hand-stop'}[v.s]||(i==V.length-1?'flag':''))}</b>`;
 return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d('x',e(v.it))))},
-dl=ln('arrow-right',M.dalshe),C=o.zapustit,P=o.kopirovat,
-ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
-(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',o.kuda&&'вставь '+o.kuda+' (⌘V)')):'')+(o.knopka?bt('kn','',o.knopka,o.prompt||o.knopka):'')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
+dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),
+ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
+(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',KD&&'вставь '+KD+' (⌘V)')):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',

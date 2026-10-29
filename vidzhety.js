@@ -1,6 +1,7 @@
 window.Marshrut=(M,c)=>{
-const D=document,mr=c||D.getElementById('mr'),N={},o=M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
+const D=document,mr=c||D.getElementById('mr'),N={},o=typeof M.otTebya=='string'?{chto:M.otTebya}:M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
+tk=(v,k='tekst')=>v&&typeof v=='object'?v[k]||'':v,
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
 ln=(i,t,c='',n='')=>t?d('ln '+c,ic(i)+`<span${n&&` title="${e(t)}"`}>${e(t)}</span>`):'',
@@ -17,12 +18,12 @@ row=([r,m,t,s,z])=>{const b=T[m],c=CH[s];
 return d('l',ic(R[r]||'user')+(b?`<b class="${b[1]}" title="${b[0]}">${b[0][0]}</b>`:'')+`<span>${e(t)}${z?`<small>${ic('lock')}${e(z)}</small>`:''}</span>`+(c?`<small class="${c[1]}">${c[0]}</small>`:''))},
 card=()=>{const x=sh[st],K=x?.knopka;
 return d('tp',d('tt',e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.length>1?d('pn',sh.map((y,i)=>`<button data-a=s data-i=${i}${i==st?' class=bn':''}>${y.s=='da'?'✓':i+1}</button>`).join('')):''))+
-d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(T[l[1]]?l:['','',l[0]+': '+l[1],l[2],l[3]])).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||K.tekst||'Делай',K.prompt||K.tekst||'делай',N[st]):''):''))},
+d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(T[l[1]]?l:['','',l[0]+': '+l[1],l[2],l[3]])).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||tk(K)||'Делай',tk(K,'prompt')||tk(K)||'делай',N[st]):''):''))},
 nd=(v,i)=>{const c=`<b class="c ${v==vs?'sey':''}">${ic({da:'check',sey:'circle-dot',zhdet:'hand-stop'}[v.s]||(i==V.length-1?'flag':''))}</b>`;
 return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d('x',e(v.it))))},
-dl=ln('arrow-right',M.dalshe),C=o.zapustit,P=o.kopirovat,
-ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
-(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',o.kuda&&'вставь '+o.kuda+' (⌘V)')):'')+(o.knopka?bt('kn','',o.knopka,o.prompt||o.knopka):'')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
+dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),
+ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
+(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',KD&&'вставь '+KD+' (⌘V)')):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
@@ -234,7 +235,7 @@ return d('o-k',d('o-cp',e(t))+d('o-v o-'+(h==null||p==q||isNaN(p+q)?'bl':(q>p)==
 spisok:B=>d('o-ls',(B.e||[]).map((s,i)=>{const[t,p,c]=[].concat(s);return d('o-r '+tn(c),`<b class="o-c">${i+1}</b><div>`+d('o-t',e(t))+(p?d('o-p',e(p)):'')+'</div>')}).join('')),
 'vybor-puti':B=>{const V=(B.e||[]).slice(0,3),h=k=>V.some(v=>v[k]),
 pm=(v,k,c)=>h(k)?d('o-ln '+c,(v[k]?ic(k):'')+`<span>${e(v[k])}</span>`):'';
-return`<div class="o-cs" style="--c:${cl(V.length)};--r:${1+h('d')+h('plus')+h('minus')+h('knopka')}${h('sovet')?';padding-top:10px':''}">`+V.map(v=>d('o-k'+(v.sovet?' o-s':''),(v.sovet?`<span class="o-bd">${ic('thumb-up')}советую</span>`:'')+d('o-t',e(v.n))+(h('d')?d('',e(v.d)):'')+pm(v,'plus','o-gr')+pm(v,'minus','o-rd')+(v.knopka?bt(v.knopka,v.prompt,v.sovet?'':'o-q'):''))).join('')+'</div>'},
+return`<div class="o-cs" style="--c:${cl(V.length)};--r:${1+h('d')+h('plus')+h('minus')+h('knopka')}${h('sovet')?';padding-top:10px':''}">`+V.map(v=>d('o-k'+(v.sovet?' o-s':''),(v.sovet?`<span class="o-bd">${ic('thumb-up')}советую</span>`:'')+d('o-t',e(v.n))+(h('d')?d('',e(v.d)):'')+pm(v,'plus','o-gr')+pm(v,'minus','o-rd')+(v.knopka?bt(v.knopka.tekst||v.knopka,v.knopka.prompt||v.prompt,v.sovet?'':'o-q'):''))).join('')+'</div>'},
 shagi:B=>{const S=(B.e||[]).map(s=>[].concat(s)),h=S.some(s=>s[1]),c=cl(S.length);
 return`<div class="o-cs o-sh" style="--c:${c};--r:${2+h}">`+S.map(([t,p,m],i)=>d('o-k'+(i%c?'':' o-f'),(i?ic('arrow-right','o-ar'):'')+d('o-st',`<b class="o-c">${i+1}</b>`+(MD[m]?`<b class="o-md o-${MD[m][1]}" title="${MD[m][0]}">${MD[m][0][0]}</b>`:''))+d('o-t',e(t))+(h?d('',e(p)):''))).join('')+'</div>'},
 stroka:B=>ln(B.i||'info-circle',B.t,tn(B.ton))
@@ -301,7 +302,7 @@ e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
 ln=(i,t,c='')=>t?d('sln '+c,ic(i)+`<span>${e(t)}</span>`):'',
-bt=(i,o)=>`<button class=sbn data-t="${e(o.prompt||o.knopka)}">${ic(i)}<span>${e(o.knopka)}</span></button>`,
+bt=(i,o,k=o.knopka?.tekst||o.knopka)=>`<button class=sbn data-t="${e(o.knopka?.prompt||o.prompt||k)}">${ic(i)}<span>${e(k)}</span></button>`,
 sc=(i,t,x)=>x?d('',d('skp',ic(i)+t)+x):'',
 X={sey:'idet',zhdet:'stoit'},
 G={papka:['folder','в папке','не записано','stoit'],vetka:['git-branch','в ветке','не влито','idet'],dom:['world','на домене','','da']},
