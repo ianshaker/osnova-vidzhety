@@ -412,10 +412,15 @@ bl=(i,t,a,f)=>a?.length?d('ub-bl',d('ub-kp',ic(i)+t)+f(a)):'',
 st=(a,i,x)=>`<button id=ub-${i} class=ub-b data-u=${a}><span class=ub-c>${ic('check')}</span>${x}</button>`,
 po=a=>`<div class=ub-pod id=ub-p${a}></div>`,
 s=v=>typeof v=='string'&&v.trim(),
-tr=v=>v.trim().replace(/[.\s]+$/,''),
+tr=v=>v.trim().replace(/[.;:,\s]+$/,''),
+pt=x=>x+(/[?!…]$/.test(x)?'':'.'),
 dv=(k,v)=>d('ub-ot',`<span class=ub-ol>${k}</span> ${e(v)}`),
 M=U.marshrut,sa=s(U.ostanovilis),nw=sa&&s(U.dalshe),old=sa&&!nw&&s(U.prodolzhit),
-F=nw?`Продолжаем${s(M?.zadacha)?` «${M.zadacha.trim()}»`:''}. Перед сжатием: ${tr(U.ostanovilis)}. Дальше по маршруту: ${tr(U.dalshe)}.`:old?U.prodolzhit:'',
+zd=s(M?.zadacha)&&tr(M.zadacha),pz=s(M?.podzadacha)&&tr(M.podzadacha),pr=s(U.prinyal)&&tr(U.prinyal),
+G=[].concat(U.gde).filter(s).map(tr).filter(Boolean),gj=G.join('; '),ps=pz&&pz!==zd,
+H=ps?`Продолжаем: ${pz}${zd?` (задача — «${zd}»)`:''}`:`Продолжаем${zd?` «${zd}»`:''}`,hd=ps&&!zd?pt(H):H+'.',
+nu=[!pr&&['«Ты принял»','prinyal — что Ян принял последним, его словами и время («13:00 «Годится» — …»; не принимал — «ещё ничего: ждёт твоего взгляда на …»)'],!gj&&['«Лежит»','gde — файлы, кадры, ветка, id фона']].filter(Boolean),
+F=nw?`${hd}${pr?` Ты принял: ${pt(pr)}`:''} Перед сжатием: ${pt(tr(U.ostanovilis))}${gj?` Лежит: ${pt(gj)}`:''} Следующий шаг: ${pt(tr(U.dalshe))}`:old?U.prodolzhit:'',
 ost=!!F,ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
 B={k:['/compact','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
@@ -449,6 +454,7 @@ c.innerHTML=`<style>
 .ub-niz{padding-top:14px;border-top:.5px solid var(--border)}
 .ub-ost{padding:12px 14px;border:1.5px solid var(--of);border-radius:12px}
 .ub-ot{font-size:16px;font-weight:500;line-height:1.4}
+.ub-gd{display:grid;gap:2px;margin-top:2px}
 .ub-ol{font-weight:400;color:var(--text-secondary)}
 .ub-kak{gap:8px;padding:10px 12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
 .ub-rw{display:flex;flex-wrap:wrap;gap:8px}
@@ -472,7 +478,7 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
-(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?dv('сделано перед сжатием:',U.ostanovilis)+dv('дальше по маршруту:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
+(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
 c.onclick=async v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
 if(await cp(t))return g();
