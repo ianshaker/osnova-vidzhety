@@ -490,3 +490,53 @@ if(await cp(t))return g();
 let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
 r.value=t;r.focus();r.select();h.textContent=m};
 if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};
+window.Generaciya=G=>{
+const D=document,g=D.getElementById('gn'),e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
+ic=n=>`<i class="ti ti-${n}" aria-hidden="true"></i>`,d=(c,x)=>`<div class="${c}">${x}</div>`,
+ch=x=>Number(x).toLocaleString('ru-RU'),er=t=>d('gn-er',ic('alert-triangle')+e(t)),
+S={da:['gn-da','circle-check','принято'],net:['gn-net','circle-x','не вышло'],zhdet:['gn-zh','hand-stop','ждёт тебя']},
+s=S[G.itog]||S.zhdet,B=G.balans||[],
+pl=(i,k,v,m,x)=>d('gn-pl',d('gn-k',ic(i)+k)+d('gn-v',v?e(v):x||'')+(m?d('gn-m',e(m)):'')),
+cena=G.cena!=null?ch(G.cena)+' '+(G.cena%1?'кредита':G.cena%10==1&&G.cena%100!=11?'кредит':G.cena%10>1&&G.cena%10<5&&(G.cena%100<12||G.cena%100>14)?'кредита':'кредитов'):'',
+kn=G.knopki||[];
+g.innerHTML=`<style>
+#gn{display:grid;gap:14px;font-size:13px;line-height:1.45}
+#gn *{box-sizing:border-box}
+.gn-t{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.gn-l{display:flex;gap:6px;align-items:center;color:var(--text-secondary);font-size:12px}
+.gn-z{font-size:17px;font-weight:500;margin-top:2px;overflow-wrap:anywhere}
+.gn-s{flex:none;display:inline-flex;gap:5px;align-items:center;padding:3px 10px;border-radius:12px;font-size:12px}
+.gn-da{background:var(--bg-success);color:var(--text-success)}
+.gn-net{background:var(--bg-danger);color:var(--text-danger)}
+.gn-zh{background:var(--bg-warning);color:var(--text-warning)}
+.gn-r{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.gn-pl{padding:10px 12px;border-radius:10px;background:var(--surface-1);min-width:0}
+.gn-k{display:flex;gap:5px;align-items:center;color:var(--text-secondary);font-size:12px}
+.gn-v{font-size:16px;font-weight:500;margin-top:3px;overflow-wrap:anywhere}
+.gn-m{color:var(--text-secondary);font-size:12px;margin-top:1px;overflow-wrap:anywhere}
+.gn-su{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--bg-accent);color:var(--text-accent)}
+.gn-su i{margin-top:2px;flex:none}
+.gn-h{color:var(--text-secondary);font-size:12px;margin-bottom:5px}
+.gn-st{display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+.gn-st b{font-weight:500;white-space:nowrap}
+.gn-st span{overflow-wrap:anywhere;min-width:0}
+.gn-p{display:flex;gap:7px;align-items:flex-start;padding:2px 0}
+.gn-p i{margin-top:2px;flex:none}
+.gn-ok i{color:var(--text-success)}
+.gn-no i{color:var(--text-danger)}
+.gn-nw i{color:var(--text-secondary)}
+.gn-f{color:var(--text-secondary);font-size:11.5px;font-family:var(--font-mono);overflow-wrap:anywhere;border-top:.5px solid var(--border);padding-top:9px}
+.gn-er{display:flex;gap:6px;align-items:center;color:var(--text-danger);font-size:12px}
+.gn-b{display:flex;gap:8px;flex-wrap:wrap}
+.gn-b button{padding:7px 14px;border-radius:8px;border:.5px solid var(--border-strong);background:transparent;color:inherit;font:inherit;cursor:pointer}
+.gn-b button:first-child{background:var(--fill-accent);color:var(--on-accent);border-color:transparent}
+.gn-b button.ok{background:var(--bg-success);color:var(--text-success);border-color:transparent}
+</style>`+
+d('gn-t',`<div>${d('gn-l',ic('sparkles')+'готовая генерация')}${d('gn-z',e(G.zag))}</div><span class="gn-s ${s[0]}">${ic(s[1])}${e(G.itogTekst||s[2])}</span>`)+
+(G.kto?'':er('Не сказано, кто нарисовал — поле kto'))+(G.cena==null?er('Не сказана цена — поле cena'):'')+(B.length==2?'':er('Не сказан баланс до и после — поле balans'))+
+d('gn-r',pl('brush','кто нарисовал',G.kto,G.gde)+pl('photo','что вышло',G.vyshlo,G.razmer)+pl('coin','цена',cena,B.length==2?`баланс ${ch(B[0])} → ${ch(B[1])}`:''))+
+((G.vhod||[]).length?`<div>${d('gn-h','что подали на вход')}${d('gn-st',G.vhod.map(([k,v])=>`<b>${e(k)}</b><span>${e(v)}</span>`).join(''))}</div>`:'')+
+(G.sut?d('gn-su',ic('eye')+`<span>${e(G.sut)}</span>`):'')+((G.proverka||[]).length?`<div>${d('gn-h','проверка качества')}${G.proverka.map(([o,t])=>d('gn-p '+(o===1?'gn-ok':o===0?'gn-no':'gn-nw'),ic(o===1?'check':o===0?'x':'info-circle')+`<span>${e(t)}</span>`)).join('')}</div>`:'')+
+(G.dalshe?d('gn-p gn-nw',ic('arrow-right')+`<span>${e(G.dalshe)}</span>`):'')+((G.nomer||G.lezhit)?d('gn-f',(G.nomer?'№ '+e(G.nomer):'')+(G.nomer&&G.lezhit?'<br>':'')+e(G.lezhit)):'')+
+(kn.length?d('gn-b',kn.map(k=>`<button data-t="${e(k.prompt||k.tekst)}">${e(k.tekst)}</button>`).join('')):'');
+g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||b.t)return;b.t=1;b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — проверь поле ввода';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Скопировано ✓ — вставь в чат (⌘V)';navigator.clipboard?.writeText(t)}}};
