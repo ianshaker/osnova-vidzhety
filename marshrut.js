@@ -21,8 +21,9 @@ return d('tp',d('tt',e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.leng
 d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(T[l[1]]?l:['','',l[0]+': '+l[1],l[2],l[3]])).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||tk(K)||'Делай',tk(K,'prompt')||tk(K)||'делай',N[st]):''):''))},
 nd=(v,i)=>{const c=`<b class="c ${v==vs?'sey':''}">${ic({da:'check',sey:'circle-dot',zhdet:'hand-stop'}[v.s]||(i==V.length-1?'flag':''))}</b>`;
 return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d('x',e(v.it))))},
-dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),
-ot=o?d('ot',ln('user','от тебя')+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
+dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),SM=String(o.smotri??'').trim(),NC=/^нечего/i.test(SM),
+sw=SM?d('ln sw'+(NC?' nc':''),ic('eye')+`<span>${NC?e(SM.replace(/^нечего(\s+смотреть)?/i,'смотреть нечего')):`<b>Смотри:</b> ${e(SM)}`}</span>`):KB.length?d('er','не сказано, что смотреть: где на странице и было → стало (поле smotri)'):'',
+ot=o?d('ot',ln('user','от тебя')+sw+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',KD&&'вставь '+KD+' (⌘V)')):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
@@ -74,6 +75,10 @@ mr.innerHTML=`<style>
 .ot{display:grid;gap:10px;justify-items:start;padding:14px 16px;border:2px solid var(--border-accent);border-radius:12px}
 .ot.da{border:0;background:var(--b);color:var(--c)}
 .ch{font-size:16px;font-weight:500}
+.sw{font-size:14px;color:var(--text-primary)}
+.sw i{margin-top:1px;font-size:16px;color:var(--text-accent)}
+.sw b{font-weight:500;color:var(--text-accent)}
+.sw.nc,.sw.nc i{color:var(--text-muted)}
 .kop{display:grid;gap:8px;justify-self:stretch}
 .fr,.km,.er{padding:10px 12px;border-radius:var(--radius);overflow-wrap:anywhere;background:var(--surface-1);border:.5px solid var(--border-strong)}
 .km{font:13px/1.45 var(--font-mono)}
