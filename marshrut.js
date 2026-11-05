@@ -25,6 +25,8 @@ dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.ko
 sw=SM?d('ln sw'+(NC?' nc':''),ic('eye')+`<span>${NC?e(SM.replace(/^нечего(\s+смотреть)?/i,'смотреть нечего')):`<b>Смотри:</b> ${e(SM)}`}</span>`):KB.length?d('er','не сказано, что смотреть: где на странице и было → стало (поле smotri)'):'',
 ot=o?d('ot',ln('user','от тебя')+sw+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',KD&&'вставь '+KD+' (⌘V)')):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
+const PY=M.priyomka,PV=[['rabotaet','Работает'],['nravitsya','Нравится'],['slaboe','Слабое место'],['kostyl','Не костыль'],['vezde','Везде'],['ne_proveril','Не проверял']].map(([k,t])=>[k,t,String(PY?.[k]??'').trim()]),PM=PV.slice(0,5).filter(x=>!x[2]).map(x=>x[1]).join(', '),
+pk=PY?d('pk',ln('clipboard-check','Моя приёмка')+PV.filter(x=>x[2]).map(([k,t,v])=>d('pq'+(k=='slaboe'?' sl':''),`<b>${t}</b><span>${e(v)}</span>`)).join('')+(PM?d('er','в приёмке нет: '+PM):'')):SM&&!NC?d('er','нет приёмки: что сам проверил, нравится ли, слабое место, не костыль, везде (поле priyomka)'):'';
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
@@ -102,10 +104,17 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 .sg>i{flex:1;height:6px;border-radius:3px;background:var(--c,var(--border-strong))}
 .sg .sey{flex:2}
 .ln.sey{color:var(--text-accent)}
+.pk{display:grid;gap:4px;padding:2px 0 2px 12px;border-left:2px solid var(--border-strong);container-type:inline-size}
+.pk>.ln{font-weight:500}
+.pq{display:grid;grid-template-columns:112px minmax(0,1fr);gap:0 10px}
+.pq b{font-weight:400;color:var(--text-muted)}
+.pq.sl b{color:var(--text-warning)}
+.pq span{overflow-wrap:anywhere}
+@container (max-width:380px){.pq{grid-template-columns:minmax(0,1fr)}.pq+.pq{margin-top:3px}}
 .fv{display:none;gap:20px}
 .mo .fv{display:grid}
 .mo .mc{display:none}
-</style>`+(pl?pl+(o?ot:''):mn?mc+d('fv',F+(o?'':ot))+(o?ot:'')+d('fv',tg(!0)):F+ot);
+</style>`+(pl?pl+pk+(o?ot:''):mn?mc+(o?d('fv',F)+pk+ot:pk?d('fv',F)+pk+d('fv',ot):d('fv',F+ot))+d('fv',tg(!0)):F+pk+ot);
 const lay=()=>{const box=Q('.pt');if(!box||!box.clientWidth)return;
 const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
