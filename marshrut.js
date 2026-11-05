@@ -130,7 +130,7 @@ if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.fv .tg':'.mc .tg').focu
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=x=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k')N[st]=x};
-if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — проверь поле ввода')}
+if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
 const r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')};
 lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay};

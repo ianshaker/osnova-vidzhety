@@ -130,7 +130,7 @@ if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.fv .tg':'.mc .tg').focu
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=x=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k')N[st]=x};
-if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — проверь поле ввода')}
+if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
 const r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')};
 lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay};
@@ -231,7 +231,7 @@ else if(c=='vb-kop'){fin(b,'Копирую…');fin(b,await cp()?'Скопиро
 else if(c=='vb-otp'){const t=pole.value.trim();
 if(!t||!otvet()&&t==P0){osh.textContent='Выбери хотя бы один ответ — или впиши свой в поле.';return}
 if(Date.now()-ps<1500)return;ps=Date.now();
-if(window.sendPrompt){setTimeout(()=>window.sendPrompt(t),300);fin(b,'Нажато ✓ — проверь поле ввода');
+if(window.sendPrompt){setTimeout(()=>window.sendPrompt(t),300);fin(b,'Нажато ✓ — не дошло? Нажми ещё раз');
 const n=!pv&&otvet()?bez().length:0;
 pod(`В поле ввода должно встать «${t}» — нажми Enter.`+(n?` Без ответа ${n} — они подождут.`:'')+' Не встало — нажми «Отправить» ещё раз или «Скопировать» и ⌘V.')}
 else{fin(b,'Копирую…');const k=await cp();fin(b,k?'Скопировано ✓ — вставь в чат (⌘V)':'Выделено — нажми ⌘C');
@@ -319,7 +319,7 @@ ot.role='region';ot.lang='ru';ot.ariaLabel=D.zag||'Ответ';
 ot.onclick=async ev=>{const b=ev.target.closest('[data-a]');if(!b)return;
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=s=>{b.classList.add('o-ok');b.lastChild.textContent=s};
-if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — проверь поле ввода')}
+if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
 const r=dc.createElement('textarea');r.className='o-rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')}};
 window.Status=D=>{
@@ -426,7 +426,7 @@ sc('user-check','за тобой',(D.tebe||[]).map(t=>d('spt',ic('square')+`<spa
 let T=0;
 st.onclick=async ev=>{const b=ev.target.closest('[data-t]');if(!b||b.classList.contains('spg')||Date.now()-T<1500)return;T=Date.now();
 const t=b.dataset.t,ok=x=>{b.classList.add('sok');b.lastChild.textContent=x;st.querySelectorAll('[data-t]').forEach(y=>y!=b&&y.classList.add('spg'))};
-if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return ok('Нажато ✓ — проверь поле ввода')}
+if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return ok('Нажато ✓ — не дошло? Нажми ещё раз')}
 if(await cp(t))return ok('Скопировано ✓ — вставь в чат (⌘V)');
 const r=W.createElement('textarea');r.className='srn';r.readOnly=1;r.value=t;b.after(r);r.select();ok('Выделено — нажми ⌘C')}};
 window.Uborka=U=>{
@@ -561,4 +561,4 @@ d('gn-r',pl('brush','кто нарисовал',G.kto,G.gde)+pl('photo','что 
 (G.sut?d('gn-su',ic('eye')+`<span>${e(G.sut)}</span>`):'')+((G.proverka||[]).length?`<div>${d('gn-h','проверка качества')}${G.proverka.map(([o,t])=>d('gn-p '+(o===1?'gn-ok':o===0?'gn-no':'gn-nw'),ic(o===1?'check':o===0?'x':'info-circle')+`<span>${e(t)}</span>`)).join('')}</div>`:'')+
 (G.dalshe?d('gn-p gn-nw',ic('arrow-right')+`<span>${e(G.dalshe)}</span>`):'')+((G.nomer||G.lezhit)?d('gn-f',(G.nomer?'№ '+e(G.nomer):'')+(G.nomer&&G.lezhit?'<br>':'')+e(G.lezhit)):'')+
 (kn.length?d('gn-b',kn.map(k=>`<button data-t="${e(k.prompt||k.tekst)}">${e(k.tekst)}</button>`).join('')):'');
-g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||b.t)return;b.t=1;b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — проверь поле ввода';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Скопировано ✓ — вставь в чат (⌘V)';navigator.clipboard?.writeText(t)}}};
+g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — не дошло? Нажми ещё раз';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Скопировано ✓ — вставь в чат (⌘V)';navigator.clipboard?.writeText(t)}}};
