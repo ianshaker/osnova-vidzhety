@@ -442,7 +442,10 @@ nu=[!pr&&['«Ты принял»','prinyal — что Ян принял посл
 F=nw?`${hd}${pr?` Ты принял: ${pt(pr)}`:''} Перед сжатием: ${pt(tr(U.ostanovilis))}${gj?` Лежит: ${pt(gj)}`:''} Следующий шаг: ${pt(tr(U.dalshe))}`:old?U.prodolzhit:'',
 ost=!!F,ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
-B={f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']};
+B={k:['/compact','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
+f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
+cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
+try{const a=D.createElement('textarea');a.value=t;a.readOnly=1;a.style.cssText='position:absolute;left:-9999px';D.body.append(a);a.select();const k=D.execCommand('copy');a.remove();return k}catch{}};
 c.innerHTML=`<style>
 #ub,.ub-niz{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
 #ub{--o:var(--bg-tint-orange);--ot:var(--text-tint-orange);--of:var(--orange-450,var(--text-tint-orange));padding:.25rem 0 .5rem;font-size:13px;line-height:1.45;container-type:inline-size}
@@ -475,14 +478,13 @@ c.innerHTML=`<style>
 .ub-kak{gap:8px;padding:10px 12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
 .ub-rw{display:flex;flex-wrap:wrap;gap:8px}
 .ub-b{display:flex;gap:8px;align-items:center;min-width:0;height:32px;padding:0 12px 0 8px;border:1px solid var(--of);border-radius:8px;background:var(--o);color:var(--ot);font-size:13px;font-weight:500;line-height:1;text-align:left;cursor:pointer}
+#ub-kn{font-family:var(--font-mono)}
 #ub-kf{flex:1 1 300px}
 .ub-b>i{flex:none;font-size:14px}
 .ub-c{display:grid;place-items:center;flex:none;width:16px;height:16px;border:1.5px dashed var(--of);border-radius:50%;font-size:11px;opacity:.6}
 .gotovo .ub-c{border-style:solid;border-color:var(--fill-success);background:var(--fill-success);color:var(--on-success);opacity:1}
 .ub-l{flex:none;white-space:nowrap}
 .ub-t{flex:1;min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px;font-weight:400;line-height:14px;color:var(--text-secondary)}
-.ub-nb{display:flex;gap:8px;align-items:center;min-height:32px;padding:0 12px;border:1px dashed var(--of);border-radius:8px;color:var(--ot);font-size:13px;font-weight:500}
-.ub-nb code{font:600 13px var(--font-mono)}
 .ub-pod{font-size:12px;color:var(--text-secondary)}
 .ub-pod:empty{display:none}
 .ub-rn{width:100%;min-height:56px;font-size:14px}
@@ -495,12 +497,12 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
-(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?`<div id=ub-kn class=ub-nb>${ic('keyboard')}<span>1 · набери <code>/compact</code> и Enter</span></div>`:'')+st('f','kf',`<span class=ub-l>${ok&&!ra?'2 · ':''}после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('corner-down-left')}`))+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
-c.onclick=v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
-const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
-if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);g();h.textContent='Фраза встала в поле ввода — нажми Enter. Не встала — нажми ещё раз.';return}
+(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
+c.onclick=async v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
+const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo'),sp=k=='f'&&window.sendPrompt?()=>setTimeout(()=>sendPrompt(t),300):0;
+if(await cp(t)){g();if(sp){sp();h.textContent='Фраза в буфере и ставлю её в поле ввода: встала — Enter, не встала — ⌘V.'}return}
 let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
-r.value=t;r.focus();r.select();h.textContent=m};
+r.value=t;r.focus();r.select();h.textContent=m+(sp?' Ещё ставлю её в поле ввода — встала, жми Enter.':'');sp&&sp()};
 if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};
 window.Generaciya=G=>{
 const D=document,g=D.getElementById('gn'),e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
