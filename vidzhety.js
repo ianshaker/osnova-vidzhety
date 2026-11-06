@@ -23,7 +23,7 @@ return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d
 dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),SM=String(o.smotri??'').trim(),NC=/^нечего/i.test(SM),
 sw=SM?d('ln sw'+(NC?' nc':''),ic('eye')+`<span>${NC?e(SM.replace(/^нечего(\s+смотреть)?/i,'смотреть нечего')):`<b>Смотри:</b> ${e(SM)}`}</span>`):KB.length?d('er','не сказано, что смотреть: где на странице и было → стало (поле smotri)'):'',
 ot=o?d('ot',ln('user','от тебя')+sw+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
-(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','copy','Скопировать',P)+ln('arrow-right',KD&&'вставь '+KD+' (⌘V)')):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
+(P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','corner-down-left','В поле ввода',P)+ln('arrow-right',KD&&(/этот чат/i.test(KD)?'встанет в поле ввода — отправь Enter':'встанет в поле ввода; '+KD+' — здесь ⌘A ⌘X, там ⌘V'))):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
 const PY=M.priyomka,PV=[['rabotaet','Работает'],['nravitsya','Нравится'],['slaboe','Слабое место'],['kostyl','Не костыль'],['vezde','Везде'],['ne_proveril','Не проверял']].map(([k,t])=>[k,t,String(PY?.[k]??'').trim()]),PM=PV.slice(0,5).filter(x=>!x[2]).map(x=>x[1]).join(', '),
 pk=PY?d('pk',ln('clipboard-check','Моя приёмка')+PV.filter(x=>x[2]).map(([k,t,v])=>d('pq'+(k=='slaboe'?' sl':''),`<b>${t}</b><span>${e(v)}</span>`)).join('')+(PM?d('er','в приёмке нет: '+PM):'')):SM&&!NC?d('er','нет приёмки: что сам проверил, нравится ли, слабое место, не костыль, везде (поле priyomka)'):'';
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
@@ -129,7 +129,7 @@ if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.fv .tg':'.mc .tg').focu
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=(x,v)=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k'&&!v)N[st]=x};
-if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
+if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 vy(b,t,fin)};
 lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay};
 window.Vybor=V=>{
@@ -199,13 +199,13 @@ d('vb-zag',ic('list-check')+`<span>${e(V.zag)}</span>`)+sw+Vs.map(vp).join('')+
 ((V.reshilSam||[]).length?d('vb-sam',ic('bulb')+`<span>Решил сам: ${V.reshilSam.map(e).join(' · ')}</span>`):'')+
 d('vb-otv',d('vb-chipy','',' id="vb-chipy" aria-live="polite"')+
 `<textarea class="vb-pole" id="vb-pole" rows="1" aria-label="Строка ответа — можно править и копировать"></textarea>`+
-d('vb-ryad',bt('vb-otp','send','Отправить')+bt('vb-kop','copy','Скопировать')+(Vs.some(v=>v.varianty.some(x=>x.sovet))?bt('vb-vse','checks','Все — как советую'):'')+bt('vb-zanovo','refresh','Собрать строку заново'))+
+d('vb-ryad',bt('vb-otp','send','Отправить')+(window.sendPrompt?'':bt('vb-kop','copy','Скопировать'))+(Vs.some(v=>v.varianty.some(x=>x.sovet))?bt('vb-vse','checks','Все — как советую'):'')+bt('vb-zanovo','refresh','Собрать строку заново'))+
 d('vb-osh','',' id="vb-osh" role="alert"')+d('vb-pod',ic('arrow-right')+`<span>${e(V.chtoBudet)}</span>`,' id="vb-pod"'));
 const pole=Q('#vb-pole'),osh=Q('#vb-osh'),zan=Q('#vb-zanovo'),pod=t=>Q('#vb-pod span').textContent=t,
 fin=(b,t)=>{b.classList.add('gotovo');b.lastChild.textContent=t},
 vys=()=>{pole.style.height='auto';pole.style.height=pole.scrollHeight+'px'},
 vy=b=>{pole.focus();pole.select();fin(b,'Выделено — нажми ⌘C');pod('Строка выделена — нажми ⌘C, потом ⌘V в поле ввода чата и Enter.')},
-sbros=()=>{osh.textContent='';[['otp','Отправить'],['kop','Скопировать']].forEach(([k,t])=>{const b=Q('#vb-'+k);b.classList.remove('gotovo');b.lastChild.textContent=t});pod(V.chtoBudet??'')};
+sbros=()=>{osh.textContent='';[['otp','Отправить'],['kop','Скопировать']].forEach(([k,t])=>{const b=Q('#vb-'+k);if(b){b.classList.remove('gotovo');b.lastChild.textContent=t}});pod(V.chtoBudet??'')};
 let pv=0,ps=0,K={t:0,i:-1,j:-1},w0=0;
 const pokazat=()=>{
 A('.vb-p').forEach(p=>p.setAttribute('aria-pressed',S[p.dataset.v].includes(+p.dataset.j)));
@@ -229,9 +229,9 @@ if(!t||!otvet()&&t==P0){osh.textContent='Выбери хотя бы один о�
 if(Date.now()-ps<1500)return;ps=Date.now();
 if(window.sendPrompt){setTimeout(()=>window.sendPrompt(t),300);fin(b,'Нажато ✓ — не дошло? Нажми ещё раз');
 const n=!pv&&otvet()?bez().length:0;
-pod(`В поле ввода должно встать «${t}» — нажми Enter.`+(n?` Без ответа ${n} — они подождут.`:'')+' Не встало — нажми «Отправить» ещё раз или «Скопировать» и ⌘V.')}
+pod(`В поле ввода должно встать «${t}» — нажми Enter.`+(n?` Без ответа ${n} — они подождут.`:'')+' Не встало — нажми «Отправить» ещё раз.')}
 else vy(b)}};
-pole.oncopy=()=>{fin(Q('#vb-kop'),'Скопировано ✓');pod('Скопировано — вставь в поле ввода чата (⌘V) и нажми Enter.')};
+pole.oncopy=()=>{const k=Q('#vb-kop');k&&fin(k,'Скопировано ✓');pod('Скопировано — вставь в поле ввода чата (⌘V) и нажми Enter.')};
 pole.oninput=()=>{pv=pole.value.trim()!=sobrat();zan.style.display=pv?'inline-flex':'none';sbros();vys()};
 window.ResizeObserver&&new ResizeObserver(([z])=>{const w=Math.round(z.contentRect.width);if(w!=w0){w0=w;requestAnimationFrame(vys)}}).observe(vb);
 pokazat()};
@@ -442,8 +442,7 @@ nu=[!pr&&['«Ты принял»','prinyal — что Ян принял посл
 F=nw?`${hd}${pr?` Ты принял: ${pt(pr)}`:''} Перед сжатием: ${pt(tr(U.ostanovilis))}${gj?` Лежит: ${pt(gj)}`:''} Следующий шаг: ${pt(tr(U.dalshe))}`:old?U.prodolzhit:'',
 ost=!!F,ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
-B={k:['/compact','«/compact» выделен: нажми ⌘C, потом ⌘V в поле ввода и Enter — или набери /compact руками.'],
-f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']};
+B={f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']};
 c.innerHTML=`<style>
 #ub,.ub-niz{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
 #ub{--o:var(--bg-tint-orange);--ot:var(--text-tint-orange);--of:var(--orange-450,var(--text-tint-orange));padding:.25rem 0 .5rem;font-size:13px;line-height:1.45;container-type:inline-size}
@@ -476,13 +475,14 @@ c.innerHTML=`<style>
 .ub-kak{gap:8px;padding:10px 12px;border:.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
 .ub-rw{display:flex;flex-wrap:wrap;gap:8px}
 .ub-b{display:flex;gap:8px;align-items:center;min-width:0;height:32px;padding:0 12px 0 8px;border:1px solid var(--of);border-radius:8px;background:var(--o);color:var(--ot);font-size:13px;font-weight:500;line-height:1;text-align:left;cursor:pointer}
-#ub-kn{font-family:var(--font-mono)}
 #ub-kf{flex:1 1 300px}
 .ub-b>i{flex:none;font-size:14px}
 .ub-c{display:grid;place-items:center;flex:none;width:16px;height:16px;border:1.5px dashed var(--of);border-radius:50%;font-size:11px;opacity:.6}
 .gotovo .ub-c{border-style:solid;border-color:var(--fill-success);background:var(--fill-success);color:var(--on-success);opacity:1}
 .ub-l{flex:none;white-space:nowrap}
 .ub-t{flex:1;min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px;font-weight:400;line-height:14px;color:var(--text-secondary)}
+.ub-nb{display:flex;gap:8px;align-items:center;min-height:32px;padding:0 12px;border:1px dashed var(--of);border-radius:8px;color:var(--ot);font-size:13px;font-weight:500}
+.ub-nb code{font:600 13px var(--font-mono)}
 .ub-pod{font-size:12px;color:var(--text-secondary)}
 .ub-pod:empty{display:none}
 .ub-rn{width:100%;min-height:56px;font-size:14px}
@@ -495,10 +495,10 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
-(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
+(ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?`<div id=ub-kn class=ub-nb>${ic('keyboard')}<span>1 · набери <code>/compact</code> и Enter</span></div>`:'')+st('f','kf',`<span class=ub-l>${ok&&!ra?'2 · ':''}после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('corner-down-left')}`))+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
 c.onclick=v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
-if(k=='f'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);g();h.textContent='Фраза ушла в поле ввода — нажми Enter. Не встала — нажми ещё раз.';return}
+if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);g();h.textContent='Фраза встала в поле ввода — нажми Enter. Не встала — нажми ещё раз.';return}
 let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
 r.value=t;r.focus();r.select();h.textContent=m};
 if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};
