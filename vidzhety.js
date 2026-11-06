@@ -12,8 +12,7 @@ CH={idet:['идёт','sey'],got:['готово','da'],zhd:['в очереди','
 V=(M.vehi??M.shagi??[]).map(v=>v.map?{n:v[0],s:v[1],it:v[2]}:v),
 nS=V.filter(v=>v.s=='sey').length,vs=V.find(v=>v.s=='sey'),sh=vs?.shagi||[];
 let st=sh.findIndex(x=>x.s!='da');if(st<0)st=sh.length-1;
-const cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
-const a=D.createElement('textarea');a.value=t;D.body.append(a);a.select();const k=D.execCommand('copy');a.remove();return k},
+const vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь (⌘V)',1);b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C',1)},
 row=([r,m,t,s,z])=>{const b=T[m],c=CH[s];
 return d('l',ic(R[r]||'user')+(b?`<b class="${b[1]}" title="${b[0]}">${b[0][0]}</b>`:'')+`<span>${e(t)}${z?`<small>${ic('lock')}${e(z)}</small>`:''}</span>`+(c?`<small class="${c[1]}">${c[0]}</small>`:''))},
 card=()=>{const x=sh[st],K=x?.knopka;
@@ -129,10 +128,9 @@ mr.onclick=async ev=>{const b=ev.target.closest('[data-a]'),a=b?.dataset.a;if(!a
 if(a=='m'){const x=mr.classList.toggle('mo');lay();Q(x?'.fv .tg':'.mc .tg').focus({preventScroll:1});return}
 if(a=='s'){st=+b.dataset.i;const c=Q('.cd');c.innerHTML=card();lay();Q(`[data-i="${st}"]`,c).focus();return}
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
-const t=b.dataset.t,fin=x=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k')N[st]=x};
+const t=b.dataset.t,fin=(x,v)=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k'&&!v)N[st]=x};
 if(a!='kop'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
-if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
-const r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')};
+vy(b,t,fin)};
 lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay};
 window.Vybor=V=>{
 const D=document,vb=D.getElementById('vb'),Q=s=>vb.querySelector(s),A=s=>[...vb.querySelectorAll(s)],Vs=V.voprosy,S=Vs.map(()=>[]),
@@ -206,9 +204,7 @@ d('vb-osh','',' id="vb-osh" role="alert"')+d('vb-pod',ic('arrow-right')+`<span>$
 const pole=Q('#vb-pole'),osh=Q('#vb-osh'),zan=Q('#vb-zanovo'),pod=t=>Q('#vb-pod span').textContent=t,
 fin=(b,t)=>{b.classList.add('gotovo');b.lastChild.textContent=t},
 vys=()=>{pole.style.height='auto';pole.style.height=pole.scrollHeight+'px'},
-cp=async()=>{try{await Promise.race([navigator.clipboard.writeText(pole.value),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
-try{pole.focus();pole.select();if(D.execCommand('copy'))return 1}catch{}
-pole.focus();pole.select()},
+vy=b=>{pole.focus();pole.select();fin(b,'Выделено — нажми ⌘C');pod('Строка выделена — нажми ⌘C, потом ⌘V в поле ввода чата и Enter.')},
 sbros=()=>{osh.textContent='';[['otp','Отправить'],['kop','Скопировать']].forEach(([k,t])=>{const b=Q('#vb-'+k);b.classList.remove('gotovo');b.lastChild.textContent=t});pod(V.chtoBudet??'')};
 let pv=0,ps=0,K={t:0,i:-1,j:-1},w0=0;
 const pokazat=()=>{
@@ -227,15 +223,15 @@ if(Vs[i].mnogo){k<0?s.push(j):s.splice(k,1);s.sort((a,b)=>a-b)}else S[i]=k<0?[j]
 pokazat();if(pv)osh.textContent='Поле поправлено руками — новый выбор в него не попал. «Собрать строку заново» — взять выбор.'}
 else if(c=='vb-vse'){Vs.forEach((v,i)=>{const r=v.varianty.flatMap((x,j)=>x.sovet?[j]:[]);if(r.length)S[i]=v.mnogo?r:r.slice(0,1)});pokazat()}
 else if(c=='vb-zanovo'){pv=0;pokazat()}
-else if(c=='vb-kop'){fin(b,'Копирую…');fin(b,await cp()?'Скопировано ✓':'Выделено — нажми ⌘C')}
+else if(c=='vb-kop')vy(b)
 else if(c=='vb-otp'){const t=pole.value.trim();
 if(!t||!otvet()&&t==P0){osh.textContent='Выбери хотя бы один ответ — или впиши свой в поле.';return}
 if(Date.now()-ps<1500)return;ps=Date.now();
 if(window.sendPrompt){setTimeout(()=>window.sendPrompt(t),300);fin(b,'Нажато ✓ — не дошло? Нажми ещё раз');
 const n=!pv&&otvet()?bez().length:0;
 pod(`В поле ввода должно встать «${t}» — нажми Enter.`+(n?` Без ответа ${n} — они подождут.`:'')+' Не встало — нажми «Отправить» ещё раз или «Скопировать» и ⌘V.')}
-else{fin(b,'Копирую…');const k=await cp();fin(b,k?'Скопировано ✓ — вставь в чат (⌘V)':'Выделено — нажми ⌘C');
-pod(k?'Строка скопирована — вставь её в поле ввода чата (⌘V) и нажми Enter.':'Строка выделена — нажми ⌘C, потом ⌘V в поле ввода чата.')}}};
+else vy(b)}};
+pole.oncopy=()=>{fin(Q('#vb-kop'),'Скопировано ✓');pod('Скопировано — вставь в поле ввода чата (⌘V) и нажми Enter.')};
 pole.oninput=()=>{pv=pole.value.trim()!=sobrat();zan.style.display=pv?'inline-flex':'none';sbros();vys()};
 window.ResizeObserver&&new ResizeObserver(([z])=>{const w=Math.round(z.contentRect.width);if(w!=w0){w0=w;requestAnimationFrame(vys)}}).observe(vb);
 pokazat()};
@@ -251,8 +247,7 @@ TN={krasnyj:'rd',zhyoltyj:'yl',zelenyj:'gr',sinij:'bl'},tn=t=>TN[t]?'o-'+TN[t]:'
 MD={opus:['Opus','yl'],sonnet:['Sonnet','bl'],haiku:['Haiku','gr']},
 ZT={beda:['rd','alert-triangle'],da:['gr','check'],vopros:['bl','bulb']},
 nm=s=>+(String(s).replace(/\s/g,'').replace(',','.').replace('−','-').match(/-?\d+\.?\d*/)||NaN),
-cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
-const a=dc.createElement('textarea');a.value=t;dc.body.append(a);a.select();let k=0;try{k=dc.execCommand('copy')}catch{}a.remove();return k},
+vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=dc.createElement('textarea');r.className='o-rn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь в чат (⌘V)');b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C')},
 BL={
 chisla:B=>{const E=B.e||[];return`<div class="o-cs" style="--c:${cl(E.length)};--r:2">`+E.map(([t,a,b,h])=>{const p=nm(a),q=nm(b);
 return d('o-k',d('o-cp',e(t))+d('o-v o-'+(h==null||p==q||isNaN(p+q)?'bl':(q>p)==!!h?'gr':'rd'),`<span>${e(a)}</span>${ic('arrow-right')}<b>${e(b)}</b>`))}).join('')+'</div>'},
@@ -320,8 +315,7 @@ ot.onclick=async ev=>{const b=ev.target.closest('[data-a]');if(!b)return;
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=s=>{b.classList.add('o-ok');b.lastChild.textContent=s};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
-if(await cp(t))return fin('Скопировано ✓ — вставь в чат (⌘V)');
-const r=dc.createElement('textarea');r.className='o-rn';r.readOnly=1;r.value=t;b.after(r);r.select();fin('Выделено — нажми ⌘C')}};
+vy(b,t,fin)}};
 window.Status=D=>{
 const W=document,st=W.getElementById('st'),Z=D.zadacha,L=D.sovet,
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
@@ -345,8 +339,7 @@ return(i?ic('arrow-right'):'')+d('ssn'+(l.length?' s'+g[3]:''),d('sml',ic(g[0])+
 fk=(D.fakty||[]).map(([i,t,s])=>ln(i,t,'sfk s'+(s||''))).join(''),
 sv=L?d('sol',d('ssv',`<span class=szn>${ic('bulb')}советую</span>`+d('sh2',e(L.n))+(L.it?d('stx',e(L.it)):'')+ln('arrow-right',L.dalshe)+bt('arrow-up-right',L))+
 (D.ili?.length?d('sml','или')+d('sil',D.ili.slice(0,2).map(o=>d('sit',`<b>${e(o.n)}</b>`+(o.it?d('sml',e(o.it)):'')+bt('arrow-up-right',o))).join('')):'')):'',
-cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
-const a=W.createElement('textarea');a.value=t;W.body.append(a);a.select();const k=W.execCommand('copy');a.remove();return k};
+vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=W.createElement('textarea');r.className='srn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь в чат (⌘V)');b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C')};
 st.innerHTML=`<style>
 #st{display:grid;gap:20px;font-size:13px;line-height:1.4;overflow-wrap:break-word}
 #st *{box-sizing:border-box}
@@ -427,8 +420,7 @@ let T=0;
 st.onclick=async ev=>{const b=ev.target.closest('[data-t]');if(!b||b.classList.contains('spg')||Date.now()-T<1500)return;T=Date.now();
 const t=b.dataset.t,ok=x=>{b.classList.add('sok');b.lastChild.textContent=x;st.querySelectorAll('[data-t]').forEach(y=>y!=b&&y.classList.add('spg'))};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return ok('Нажато ✓ — не дошло? Нажми ещё раз')}
-if(await cp(t))return ok('Скопировано ✓ — вставь в чат (⌘V)');
-const r=W.createElement('textarea');r.className='srn';r.readOnly=1;r.value=t;b.after(r);r.select();ok('Выделено — нажми ⌘C')}};
+vy(b,t,ok)}};
 window.Uborka=U=>{
 const D=document,c=D.getElementById('ub'),Q=(s,r=c)=>r.querySelector(s),
 e=s=>String(s??'').replace(/[&<>"]/g,x=>'&#'+x.charCodeAt()+';'),
@@ -450,10 +442,8 @@ nu=[!pr&&['«Ты принял»','prinyal — что Ян принял посл
 F=nw?`${hd}${pr?` Ты принял: ${pt(pr)}`:''} Перед сжатием: ${pt(tr(U.ostanovilis))}${gj?` Лежит: ${pt(gj)}`:''} Следующий шаг: ${pt(tr(U.dalshe))}`:old?U.prodolzhit:'',
 ost=!!F,ok=s(U.zhurnal)&&ost,ra=ok&&s(U.rano),
 T=!ok?'Уборка не закончена — сжимать рано':ra?'Всё разложено — сжимать пока рано':'Уборка перед сжатием — всё разложено',
-B={k:['/compact','«/compact» выделен: нажми ⌘C, потом вставь в поле и Enter.'],
-f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']},
-cp=async t=>{try{await Promise.race([navigator.clipboard.writeText(t),new Promise((_,n)=>setTimeout(n,500))]);return 1}catch{}
-try{const a=D.createElement('textarea');a.value=t;a.readOnly=1;a.style.cssText='position:absolute;left:-9999px';D.body.append(a);a.select();const k=D.execCommand('copy');a.remove();return k}catch{}};
+B={k:['/compact','«/compact» выделен: нажми ⌘C, потом ⌘V в поле ввода и Enter — или набери /compact руками.'],
+f:[F,'Фраза выделена: нажми ⌘C, после /compact вставь её первым сообщением.']};
 c.innerHTML=`<style>
 #ub,.ub-niz{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
 #ub{--o:var(--bg-tint-orange);--ot:var(--text-tint-orange);--of:var(--orange-450,var(--text-tint-orange));padding:.25rem 0 .5rem;font-size:13px;line-height:1.45;container-type:inline-size}
@@ -506,9 +496,9 @@ bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.ma
 d('ub-niz',
 (M?.zadacha?d('ub-mr','<div id=mr></div>'):ln('alert-triangle','Маршрута нет — заполни marshrut: задача и вехи из последнего маршрута «где мы»','ub-no'))+
 (ost?d('ub-bl ub-ost',d('ub-kp',ic('map-pin')+'где остановились')+(nw?(pr?dv('ты принял:',U.prinyal):'')+dv('сделано перед сжатием:',U.ostanovilis)+(gj?d('ub-ot',`<span class=ub-ol>лежит:</span>`+d('ub-gd',G.map(x=>d('ub-f',e(x))).join(''))):'')+dv('следующий шаг:',U.dalshe):d('ub-ot',e(U.ostanovilis))))+d('ub-bl ub-kak',d('ub-kp',ic('list-numbers')+'как сжать')+(ra?ln('clock','Сжимать пока рано: '+e(U.rano),'ub-ra'):'')+(old?ln('alert-triangle','Фраза по-старому: напиши ostanovilis — что сделали прямо перед сжатием, и dalshe — что дальше по маршруту; фразу виджет соберёт сам','ub-no'):'')+(nw&&nu.length?ln('alert-triangle',`Фраза без ${nu.map(x=>x[0]).join(' и ')}: допиши ${nu.map(x=>x[1]).join(', и ')}`,'ub-no'):'')+(nw&&zd&&!pz?ln('info-circle','Нет podzadacha в marshrut — первым во фразе встанет общий заголовок задачи','ub-ra'):'')+d('ub-rw',(ok&&!ra?st('k','kn','<span>/compact</span>'):'')+st('f','kf',`<span class=ub-l>после сжатия</span><span class=ub-t title="${e(F)}">${e(F)}</span>${ic('copy')}`))+(ok&&!ra?po('k'):'')+po('f')):ln('alert-triangle','Не написано, где остановились — заполни ostanovilis (что сделали перед сжатием) и dalshe (что дальше по маршруту). Без них сжимать рано','ub-no')));
-c.onclick=async v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
+c.onclick=v=>{const b=v.target.closest('[data-u]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo');
-if(await cp(t))return g();
+if(k=='f'&&window.sendPrompt){setTimeout(()=>sendPrompt(t),300);g();h.textContent='Фраза ушла в поле ввода — нажми Enter. Не встала — нажми ещё раз.';return}
 let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
 r.value=t;r.focus();r.select();h.textContent=m};
 if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};
@@ -561,4 +551,4 @@ d('gn-r',pl('brush','кто нарисовал',G.kto,G.gde)+pl('photo','что 
 (G.sut?d('gn-su',ic('eye')+`<span>${e(G.sut)}</span>`):'')+((G.proverka||[]).length?`<div>${d('gn-h','проверка качества')}${G.proverka.map(([o,t])=>d('gn-p '+(o===1?'gn-ok':o===0?'gn-no':'gn-nw'),ic(o===1?'check':o===0?'x':'info-circle')+`<span>${e(t)}</span>`)).join('')}</div>`:'')+
 (G.dalshe?d('gn-p gn-nw',ic('arrow-right')+`<span>${e(G.dalshe)}</span>`):'')+((G.nomer||G.lezhit)?d('gn-f',(G.nomer?'№ '+e(G.nomer):'')+(G.nomer&&G.lezhit?'<br>':'')+e(G.lezhit)):'')+
 (kn.length?d('gn-b',kn.map(k=>`<button data-t="${e(k.prompt||k.tekst)}">${e(k.tekst)}</button>`).join('')):'');
-g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — не дошло? Нажми ещё раз';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Скопировано ✓ — вставь в чат (⌘V)';navigator.clipboard?.writeText(t)}}};
+g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — не дошло? Нажми ещё раз';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Выделено — нажми ⌘C';let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.readOnly=1;r.style.cssText='width:100%;min-height:56px';r.oncopy=()=>b.textContent='Скопировано ✓ — вставь в чат (⌘V)';b.parentNode.after(r)}r.value=t;r.focus();r.select()}}};
