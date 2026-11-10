@@ -1,5 +1,5 @@
-window.Marshrut=(M,c)=>{
-const D=document,mr=c||D.getElementById('mr'),N={},o=typeof M.otTebya=='string'?{chto:M.otTebya}:M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
+window.Marshrut=(M,c)=>{try{
+const D=document,mr=c||D.getElementById('mr'),N={},Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),o=typeof M.otTebya=='string'?{chto:M.otTebya}:M.otTebya||0,Z=M.zadacha,Q=(s,r=mr)=>r.querySelector(s),A=(s,r=mr)=>[...r.querySelectorAll(s)],rc=x=>x.getBoundingClientRect(),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 tk=(v,k='tekst')=>v&&typeof v=='object'?v[k]||'':v,
 ic=n=>`<i class="ti ti-${n}"></i>`,
@@ -9,8 +9,8 @@ bt=(a,i,t,x,g)=>`<button class="bn${g?' ok':''}" data-a=${a} data-t="${e(x)}">${
 R={sborshchik:'search',ispolnitel:'tool',mekhanik:'rocket',razvedchik:'world',proveryayushchiy:'eye',opus:'brain'},
 T={sonnet:['Sonnet','sey'],opus:['Opus','zhdet'],haiku:['Haiku','da']},
 CH={idet:['идёт','sey'],got:['готово','da'],zhd:['в очереди','']},
-V=(M.vehi??M.shagi??[]).map(v=>v.map?{n:v[0],s:v[1],it:v[2]}:v),
-nS=V.filter(v=>v.s=='sey').length,vs=V.find(v=>v.s=='sey'),sh=vs?.shagi||[];
+V=Ls(M.vehi??M.shagi).map(v=>v.map?{n:v[0],s:v[1],it:v[2]}:v),BY=Array.isArray(M.bylo)&&typeof M.bylo[0]=='string'?[M.bylo]:Ls(M.bylo),
+nS=V.filter(v=>v.s=='sey').length,vs=V.find(v=>v.s=='sey'),sh=Ls(vs?.shagi);
 let st=sh.findIndex(x=>x.s!='da');if(st<0)st=sh.length-1;
 const vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь (⌘V)',1);b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C',1)},
 lc=l=>l?.map?l:l?.big?['','',l]:[l?.rol,l?.model,l?.chto||l?.tekst||'',l?.status,l?.resurs],
@@ -21,7 +21,7 @@ return d('tp',d('tt',e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.leng
 d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(l?.map&&l[0]&&!T[l[1]]?['','',l[0]+': '+l[1],l[2],l[3]]:lc(l))).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||tk(K)||'Делай',tk(K,'prompt')||tk(K)||'делай',N[st]):''):''))},
 nd=(v,i)=>{const c=`<b class="c ${v==vs?'sey':''}">${ic({da:'check',sey:'circle-dot',zhdet:'hand-stop'}[v.s]||(i==V.length-1?'flag':''))}</b>`;
 return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d('x',e(v.it))))},
-dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=o.knopki||(o.knopka?[o.knopka]:[]),SM=String(o.smotri??'').trim(),NC=/^нечего/i.test(SM),
+dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=Ls(o.knopki||o.knopka),SM=String(o.smotri??'').trim(),NC=/^нечего/i.test(SM),
 sw=SM?d('ln sw'+(NC?' nc':''),ic('eye')+`<span>${NC?e(SM.replace(/^нечего(\s+смотреть)?/i,'смотреть нечего')):`<b>Смотри:</b> ${e(SM)}`}</span>`):KB.length?d('er','не сказано, что смотреть: где на странице и было → стало (поле smotri)'):'',
 ot=o?d('ot',ln('user','от тебя')+sw+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
 (P?/^\s*(\.?\/|~\/|(sh|bash|zsh|npm|npx|node|python3?|git|gh|cd|brew|curl|make|open|cp|mv|rm)\s)/.test(P)?d('er','Это команда: её кладут в zapustit, не в kopirovat'):d('kop',d('fr',e(P))+bt('kop','corner-down-left','В поле ввода',P)+ln('arrow-right',KD&&(/этот чат/i.test(KD)?'встанет в поле ввода — отправь Enter':'встанет в поле ввода; '+KD+' — здесь ⌘A ⌘X, там ⌘V'))):'')+KB.map(k=>tk(k)?bt('kn','',tk(k),k.prompt||!KB[1]&&o.prompt||tk(k)):d('er','knopka без надписи')).join('')+dl):d('ot da',d('ch',ic('circle-check')+' От тебя ничего')+dl);
@@ -30,7 +30,7 @@ pk=PY?d('pk',ln('clipboard-check','Моя приёмка')+PV.filter(x=>x[2]).ma
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
-F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+((M.bylo||[]).length?d('bs',M.bylo.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+(BY.length?d('bs',BY.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
 rw=[V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'',vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'',ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1)],k=rw.map(x=>!!x).lastIndexOf(!0),
 pl=M.puls&&d('mc pu',d('mt',ic('activity')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+ln('corner-down-right',M.podzadacha)+(M.lyudi||[]).map(l=>row(lc(l))).join('')+(M.prosnus?ln('alarm','проснусь сам в '+M.prosnus):d('er','пульс без будильника — prosnus: ЧЧ:ММ'))),
 mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+rw.map((x,i)=>(i==1?er:'')+(i==k?x.replace(/<\/div>$/,tg(!1)+'</div>').replace('"','"bx '):x)).join('')+(k<0?tg(!1):''));
@@ -132,9 +132,9 @@ if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=(x,v)=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k'&&!v)N[st]=x};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 vy(b,t,fin)};
-lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay};
-window.Vybor=V=>{
-const D=document,vb=D.getElementById('vb'),Q=s=>vb.querySelector(s),A=s=>[...vb.querySelectorAll(s)],Vs=V.voprosy,S=Vs.map(()=>[]),
+lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay}catch(x){const m=c||document.getElementById('mr');if(m)m.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет маршрута не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
+window.Vybor=V=>{try{
+const D=document,vb=D.getElementById('vb'),Q=s=>vb.querySelector(s),A=s=>[...vb.querySelectorAll(s)],Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),Vs=Ls(V.voprosy).map(v=>({...v,varianty:Ls(v.varianty)})),S=Vs.map(()=>[]),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x,a='')=>`<div class="${c}"${a}>${x}</div>`,
@@ -235,9 +235,9 @@ else vy(b)}};
 pole.oncopy=()=>{const k=Q('#vb-kop');k&&fin(k,'Скопировано ✓');pod('Скопировано — вставь в поле ввода чата (⌘V) и нажми Enter.')};
 pole.oninput=()=>{pv=pole.value.trim()!=sobrat();zan.style.display=pv?'inline-flex':'none';sbros();vys()};
 window.ResizeObserver&&new ResizeObserver(([z])=>{const w=Math.round(z.contentRect.width);if(w!=w0){w0=w;requestAnimationFrame(vys)}}).observe(vb);
-pokazat()};
-window.Otvet=D=>{
-const dc=document,ot=dc.getElementById('ot'),
+pokazat()}catch(x){const c=document.getElementById('vb');if(c)c.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет выбора не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
+window.Otvet=D=>{try{
+const dc=document,ot=dc.getElementById('ot'),Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=(n,c='')=>`<i class="ti ti-${e(n)} ${c}" aria-hidden="true"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
@@ -261,7 +261,7 @@ shagi:B=>{const S=(B.e||[]).map(s=>[].concat(s)),h=S.some(s=>s[1]),c=cl(S.length
 return`<div class="o-cs o-sh" style="--c:${c};--r:${2+h}">`+S.map(([t,p,m],i)=>d('o-k'+(i%c?'':' o-f'),(i?ic('arrow-right','o-ar'):'')+d('o-st',`<b class="o-c">${i+1}</b>`+(MD[m]?`<b class="o-md o-${MD[m][1]}" title="${MD[m][0]}">${MD[m][0][0]}</b>`:''))+d('o-t',e(t))+(h?d('',e(p)):''))).join('')+'</div>'},
 stroka:B=>ln(B.i||'info-circle',B.t,tn(B.ton))
 },
-bk=B=>{const k=B.b||B.tip||Object.keys(BL).find(x=>B[x]),X=B.b?B:{...B,b:k,e:B.e||B[k]||B.strok||B.punkty||B.stroki};
+bk=B=>{const k=B.b||B.tip||Object.keys(BL).find(x=>B[x]),X={...B,b:k,e:Ls(B.b?B.e:B.e||B[k]||B.strok||B.punkty||B.stroki)};
 return d('o-bk',(X.n?d('o-n',e(X.n)):'')+(BL[X.b]?BL[X.b](X):d('o-er','блок «'+e(X.b)+'» не из списка')))},
 Z=ZT[D.ton];
 ot.innerHTML=`<style>
@@ -310,15 +310,15 @@ ot.innerHTML=`<style>
 ${['gr:success','rd:danger','yl:warning','bl:accent'].map(x=>{const[k,t]=x.split(':');return`.o-${k}{--c:var(--text-${t});--b:var(--bg-${t})}`}).join('\n')}
 @container (max-width:460px){.o-z{font-size:18px}.o-bs{grid-template-columns:1fr}.o-bs>.o-ar{transform:rotate(90deg);justify-self:center}}
 @container (max-width:559px){.o-cs{grid-template-columns:minmax(0,1fr)}.o-sh{row-gap:28px}.o-k>.o-ar{left:calc(50% - 14px);top:-30px;transform:rotate(90deg)}.o-f>.o-ar{display:grid}}
-</style>`+(D.zag?d('o-z',(Z?`<span class="o-zn o-${Z[0]}">${ic(Z[1])}</span>`:'')+`<span>${e(D.zag)}</span>`):'')+(D.bloki||[]).filter(Boolean).map(bk).join('');
+</style>`+(D.zag?d('o-z',(Z?`<span class="o-zn o-${Z[0]}">${ic(Z[1])}</span>`:'')+`<span>${e(D.zag)}</span>`):'')+Ls(D.bloki).filter(Boolean).map(bk).join('');
 ot.role='region';ot.lang='ru';ot.ariaLabel=D.zag||'Ответ';
 ot.onclick=async ev=>{const b=ev.target.closest('[data-a]');if(!b)return;
 if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=s=>{b.classList.add('o-ok');b.lastChild.textContent=s};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
-vy(b,t,fin)}};
-window.Status=D=>{
-const W=document,st=W.getElementById('st'),Z=D.zadacha,L=D.sovet,
+vy(b,t,fin)}}catch(x){const c=document.getElementById('ot');if(c)c.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет ответа не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
+window.Status=D=>{try{
+const W=document,st=W.getElementById('st'),Z=D.zadacha,L=D.sovet,Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(c,x)=>`<div class="${c}">${x}</div>`,
@@ -327,19 +327,19 @@ bt=(i,o,k=o.knopka?.tekst||o.knopka)=>`<button class=sbn data-t="${e(o.knopka?.p
 sc=(i,t,x)=>x?d('',d('skp',ic(i)+t)+x):'',
 X={sey:'idet',zhdet:'stoit'},
 G={papka:['folder','в папке','не записано','stoit'],vetka:['git-branch','в ветке','не влито','idet'],dom:['world','на домене','','da']},
-V=(D.shagi??D.vehi??[]).map(v=>{v=v.map?{n:v[0],s:v[1],it:v[2]}:v;return{...v,s:X[v.s]||v.s||''}}),
+V=Ls(D.shagi??D.vehi).map(v=>{v=v.map?{n:v[0],s:v[1],it:v[2]}:v;return{...v,s:X[v.s]||v.s||''}}),
 AC=V.filter(v=>v.s=='idet'||v.s=='stoit'),cu=AC[0],nd=V.filter(v=>v.s=='da').length,fin=nd&&nd==V.length,lk=V.at(-1)?.k,
 pi=cu?V.indexOf(cu)+1:fin?V.length+1:V.findIndex(v=>!v.s)+1,
 row=v=>{const g=G[v.gde];
 return d('sr s'+v.s,`<span class=sic>${v.s?ic('check'):V.indexOf(v)+1}</span>`+d('',`<b>${e(v.n)}</b>`+(v.it?d('sml',e(v.it)):''))+(g?`<span class="sm s${g[3]}">${g[1]}${v.d?' · '+e(v.d):''}</span>`:v.k?`<span class=sm>${e(v.k)}</span>`:''))},
 card=u=>d('scd s'+u.s,d('stp',`<span>${ic(u.s=='idet'?'circle-dot':'player-pause')}сейчас · ${u.s=='idet'?'идёт':'стоит'}</span>`+(u.k?`<span>${e(u.k)}</span>`:''))+d('sh2',e(u.n))+(u.it?d('stx',e(u.it)):'')+(u.zhd?d('szh','Ждёт: '+e(u.zhd)):'')+
-(u.pod?d('spd',u.pod.map((p,i)=>{p=p.map?p:[p];return`<span class="s${p[1]||''}">${i+1} · ${e(p[0])}</span>`}).join('')):'')),
+(u.pod?d('spd',Ls(u.pod).map((p,i)=>{p=p.map?p:[p];return`<span class="s${p[1]||''}">${i+1} · ${e(p[0])}</span>`}).join('')):'')),
 gd=V.filter(v=>G[v.gde]),
 tr=gd.length?d('sst',['papka','vetka','dom'].map((k,i)=>{const g=G[k],l=gd.filter(v=>v.gde==k);
 return(i?ic('arrow-right'):'')+d('ssn'+(l.length?' s'+g[3]:''),d('sml',ic(g[0])+' '+g[1]+(g[2]?', '+g[2]:''))+d('snu',l.length)+(l.length?d('sml',l.map(v=>e(v.k||v.n)).join(' · ')):''))}).join('')):'',
-fk=(D.fakty||[]).map(([i,t,s])=>ln(i,t,'sfk s'+(s||''))).join(''),
-sv=L?d('sol',d('ssv',`<span class=szn>${ic('bulb')}советую</span>`+d('sh2',e(L.n))+(L.it?d('stx',e(L.it)):'')+ln('arrow-right',L.dalshe)+bt('arrow-up-right',L))+
-(D.ili?.length?d('sml','или')+d('sil',D.ili.slice(0,2).map(o=>d('sit',`<b>${e(o.n)}</b>`+(o.it?d('sml',e(o.it)):'')+bt('arrow-up-right',o))).join('')):'')):'',
+fk=Ls(D.fakty).map(([i,t,s])=>ln(i,t,'sfk s'+(s||''))).join(''),
+IL=Ls(D.ili),sv=L?d('sol',d('ssv',`<span class=szn>${ic('bulb')}советую</span>`+d('sh2',e(L.n))+(L.it?d('stx',e(L.it)):'')+ln('arrow-right',L.dalshe)+bt('arrow-up-right',L))+
+(IL.length?d('sml','или')+d('sil',IL.slice(0,2).map(o=>d('sit',`<b>${e(o.n)}</b>`+(o.it?d('sml',e(o.it)):'')+bt('arrow-up-right',o))).join('')):'')):'',
 vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=W.createElement('textarea');r.className='srn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь в чат (⌘V)');b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C')};
 st.innerHTML=`<style>
 #st{display:grid;gap:20px;font-size:13px;line-height:1.4;overflow-wrap:break-word}
@@ -416,19 +416,19 @@ d('shd',d('',ln('calendar',D.kogda)+d('szd'+(Z?'':' sno'),Z?e(Z):'Задача �
 sc('circle-check','сделано',nd?d('sls',V.filter(v=>v.s=='da').map(row).join('')):'')+
 (fin?'':sc('route','дальше',d('sls sq',V.filter(v=>!v.s).map(row).join('')+d('sr',`<span class=sic>${ic('flag')}</span>`+d('',`<b>${e(D.finish||'цель')}</b>`)+(lk?`<span class=sm>после ${e(lk)}</span>`:'')))))+
 sc('git-merge','где лежит работа',tr+(fk?d('sfs',fk):''))+sv+
-sc('user-check','за тобой',(D.tebe||[]).map(t=>d('spt',ic('square')+`<span>${e(t)}</span>`)).join('')+ln('list',D.drugie&&'ещё в этом чате: '+D.drugie));
+sc('user-check','за тобой',Ls(D.tebe).map(t=>d('spt',ic('square')+`<span>${e(t)}</span>`)).join('')+ln('list',D.drugie&&'ещё в этом чате: '+D.drugie));
 let T=0;
 st.onclick=async ev=>{const b=ev.target.closest('[data-t]');if(!b||b.classList.contains('spg')||Date.now()-T<1500)return;T=Date.now();
 const t=b.dataset.t,ok=x=>{b.classList.add('sok');b.lastChild.textContent=x;st.querySelectorAll('[data-t]').forEach(y=>y!=b&&y.classList.add('spg'))};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return ok('Нажато ✓ — не дошло? Нажми ещё раз')}
-vy(b,t,ok)}};
-window.Uborka=U=>{
+vy(b,t,ok)}}catch(x){const c=document.getElementById('st');if(c)c.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет статуса не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
+window.Uborka=U=>{try{
 const D=document,c=D.getElementById('ub'),Q=(s,r=c)=>r.querySelector(s),
 e=s=>String(s??'').replace(/[&<>"]/g,x=>'&#'+x.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}"></i>`,
 d=(k,x)=>`<div class="${k}">${x}</div>`,
 ln=(i,t,k='')=>d('ub-ln '+k,ic(i)+`<span>${t}</span>`),
-bl=(i,t,a,f)=>a?.length?d('ub-bl',d('ub-kp',ic(i)+t)+f(a)):'',
+bl=(i,t,a,f)=>(a=[].concat(a??[]).filter(x=>x!=null&&x!=='')).length?d('ub-bl',d('ub-kp',ic(i)+t)+f(a)):'',
 st=(a,i,x)=>`<button id=ub-${i} class=ub-b data-u=${a}><span class=ub-c>${ic('check')}</span>${x}</button>`,
 po=a=>`<div class=ub-pod id=ub-p${a}></div>`,
 s=v=>typeof v=='string'&&v.trim(),
@@ -493,7 +493,7 @@ c.innerHTML=`<style>
 </style><h2 class=ub-sr>${T}. ${e(U.povod)}</h2>`+
 d('ub-sh',ic('archive')+`<div>${d('ub-z',T)}${e(U.povod)}</div>`)+
 bl('notes','собрал из чата',U.sobral,a=>`<ol class=ub-sp>${a.map(x=>`<li>${e(x)}</li>`).join('')}</ol>`)+
-bl('folder','куда легло',U.kuda,a=>d('ub-kd',a.map(([x,y])=>`<span>${e(x)}</span><span class=ub-f>${e(y)}</span>`).join('')))+
+bl('folder','куда легло',U.kuda,a=>d('ub-kd',a.map(k=>{const[x,y]=[].concat(k);return`<span>${e(x)}</span><span class=ub-f>${e(y)}</span>`}).join('')))+
 bl('shield-check','проверил машиной',U.proveril,a=>d('ub-pr',a.map(x=>`<span>${ic('check')}${e(x)}</span>`).join('')))+
 (s(U.zhurnal)?ln('file-check',`Строка журнала уборок: <code>${e(U.zhurnal)}</code>`):ln('alert-triangle','Строки в журнале уборок нет — значит, уборка не доведена. Не сжимай: спроси «где строка журнала?»','ub-no'))+
 d('ub-niz',
@@ -504,16 +504,17 @@ const k=b.dataset.u,[t,m]=B[k],h=Q('#ub-p'+k),g=()=>b.classList.add('gotovo'),sp
 if(await cp(t)){g();if(sp){sp();h.textContent='Фраза в буфере и ставлю её в поле ввода: встала — Enter, не встала — ⌘V.'}return}
 let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='ub-rn';r.readOnly=1;r.oncopy=g;h.before(r)}
 r.value=t;r.focus();r.select();h.textContent=m+(sp?' Ещё ставлю её в поле ввода — встала, жми Enter.':'');sp&&sp()};
-if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}};
-window.Generaciya=G=>{
-const D=document,g=D.getElementById('gn'),e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
+if(M?.zadacha&&window.Marshrut){const m=Q('#mr');Marshrut(M,m);Q('.ot',m)?.remove()}
+}catch(x){const c=document.getElementById('ub');if(c)c.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет уборки не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «уборка не нарисовалась» — он перерисует (поля — шаблоны/uborka/README.md).</p>'}};
+window.Generaciya=G=>{try{
+const D=document,g=D.getElementById('gn'),Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
 ic=n=>`<i class="ti ti-${n}" aria-hidden="true"></i>`,d=(c,x)=>`<div class="${c}">${x}</div>`,
 ch=x=>Number(x).toLocaleString('ru-RU'),er=t=>d('gn-er',ic('alert-triangle')+e(t)),
 S={da:['gn-da','circle-check','принято'],net:['gn-net','circle-x','не вышло'],zhdet:['gn-zh','hand-stop','ждёт тебя']},
 s=S[G.itog]||S.zhdet,B=G.balans||[],
 pl=(i,k,v,m,x)=>d('gn-pl',d('gn-k',ic(i)+k)+d('gn-v',v?e(v):x||'')+(m?d('gn-m',e(m)):'')),
 cena=G.cena!=null?ch(G.cena)+' '+(G.cena%1?'кредита':G.cena%10==1&&G.cena%100!=11?'кредит':G.cena%10>1&&G.cena%10<5&&(G.cena%100<12||G.cena%100>14)?'кредита':'кредитов'):'',
-kn=G.knopki||[];
+kn=Ls(G.knopki),VH=Ls(G.vhod),PR=Ls(G.proverka);
 g.innerHTML=`<style>
 #gn{display:grid;gap:14px;font-size:13px;line-height:1.45}
 #gn *{box-sizing:border-box}
@@ -550,8 +551,8 @@ g.innerHTML=`<style>
 d('gn-t',`<div>${d('gn-l',ic('sparkles')+'готовая генерация')}${d('gn-z',e(G.zag))}</div><span class="gn-s ${s[0]}">${ic(s[1])}${e(G.itogTekst||s[2])}</span>`)+
 (G.kto?'':er('Не сказано, кто нарисовал — поле kto'))+(G.cena==null?er('Не сказана цена — поле cena'):'')+(B.length==2?'':er('Не сказан баланс до и после — поле balans'))+
 d('gn-r',pl('brush','кто нарисовал',G.kto,G.gde)+pl('photo','что вышло',G.vyshlo,G.razmer)+pl('coin','цена',cena,B.length==2?`баланс ${ch(B[0])} → ${ch(B[1])}`:''))+
-((G.vhod||[]).length?`<div>${d('gn-h','что подали на вход')}${d('gn-st',G.vhod.map(([k,v])=>`<b>${e(k)}</b><span>${e(v)}</span>`).join(''))}</div>`:'')+
-(G.sut?d('gn-su',ic('eye')+`<span>${e(G.sut)}</span>`):'')+((G.proverka||[]).length?`<div>${d('gn-h','проверка качества')}${G.proverka.map(([o,t])=>d('gn-p '+(o===1?'gn-ok':o===0?'gn-no':'gn-nw'),ic(o===1?'check':o===0?'x':'info-circle')+`<span>${e(t)}</span>`)).join('')}</div>`:'')+
+(VH.length?`<div>${d('gn-h','что подали на вход')}${d('gn-st',VH.map(([k,v])=>`<b>${e(k)}</b><span>${e(v)}</span>`).join(''))}</div>`:'')+
+(G.sut?d('gn-su',ic('eye')+`<span>${e(G.sut)}</span>`):'')+(PR.length?`<div>${d('gn-h','проверка качества')}${PR.map(([o,t])=>d('gn-p '+(o===1?'gn-ok':o===0?'gn-no':'gn-nw'),ic(o===1?'check':o===0?'x':'info-circle')+`<span>${e(t)}</span>`)).join('')}</div>`:'')+
 (G.dalshe?d('gn-p gn-nw',ic('arrow-right')+`<span>${e(G.dalshe)}</span>`):'')+((G.nomer||G.lezhit)?d('gn-f',(G.nomer?'№ '+e(G.nomer):'')+(G.nomer&&G.lezhit?'<br>':'')+e(G.lezhit)):'')+
 (kn.length?d('gn-b',kn.map(k=>`<button data-t="${e(k.prompt||k.tekst)}">${e(k.tekst)}</button>`).join('')):'');
-g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — не дошло? Нажми ещё раз';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Выделено — нажми ⌘C';let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.readOnly=1;r.style.cssText='width:100%;min-height:56px';r.oncopy=()=>b.textContent='Скопировано ✓ — вставь в чат (⌘V)';b.parentNode.after(r)}r.value=t;r.focus();r.select()}}};
+g.onclick=ev=>{const b=ev.target.closest('button[data-t]');if(!b||Date.now()-(b.t||0)<1500)return;b.t=Date.now();b.classList.add('ok');const t=b.dataset.t;if(window.sendPrompt){b.textContent='Нажато ✓ — не дошло? Нажми ещё раз';setTimeout(()=>sendPrompt(t),300)}else{b.textContent='Выделено — нажми ⌘C';let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.readOnly=1;r.style.cssText='width:100%;min-height:56px';r.oncopy=()=>b.textContent='Скопировано ✓ — вставь в чат (⌘V)';b.parentNode.after(r)}r.value=t;r.focus();r.select()}}}catch(x){const c=document.getElementById('gn');if(c)c.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет генерации не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
