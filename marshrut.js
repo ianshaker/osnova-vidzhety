@@ -9,7 +9,9 @@ bt=(a,i,t,x,g)=>`<button class="bn${g?' ok':''}" data-a=${a} data-t="${e(x)}">${
 R={sborshchik:'search',ispolnitel:'tool',mekhanik:'rocket',razvedchik:'world',proveryayushchiy:'eye',opus:'brain'},
 T={sonnet:['Sonnet','sey'],opus:['Opus','zhdet'],haiku:['Haiku','da']},
 CH={idet:['идёт','sey'],got:['готово','da'],zhd:['в очереди','']},
-V=Ls(M.vehi??M.shagi).map(v=>v.map?{n:v[0],s:v[1],it:v[2]}:v),BY=Array.isArray(M.bylo)&&typeof M.bylo[0]=='string'?[M.bylo]:Ls(M.bylo),
+PO=/^\s*(по[\s-]+ходу|попутно|заодно)(\s+-|\s*[:：—–―])\s*/i,
+V=Ls(M.vehi??M.shagi).map(v=>{v=v.map?{n:v[0],s:v[1],it:v[2],pr:v[3]}:v;return PO.test(v.n)||v.po?{...v,po:1,n:String(v.n??'').replace(PO,''),pr:v.s=='da'&&v.pr&&/^(string|number)$/.test(typeof v.pr)?String(v.pr).trim():''}:v}),BY=Array.isArray(M.bylo)&&typeof M.bylo[0]=='string'?[M.bylo]:Ls(M.bylo),
+PH=V.filter(v=>v.po),PE=PH.filter(v=>!v.pr),NL=(a=>V.map(v=>v.po?'+'+ ++a[1]:''+ ++a[0]))([0,0]),PI=d('po',ic('corner-down-right')+'по ходу'),
 nS=V.filter(v=>v.s=='sey').length,vs=V.find(v=>v.s=='sey'),sh=Ls(vs?.shagi);
 let st=sh.findIndex(x=>x.s!='da');if(st<0)st=sh.length-1;
 const vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=D.createElement('textarea');r.className='rn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь (⌘V)',1);b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C',1)},
@@ -17,10 +19,10 @@ lc=l=>l?.map?l:l?.big?['','',l]:[l?.rol,l?.model,l?.chto||l?.tekst||'',l?.status
 row=([r,m,t,s,z])=>{const b=T[m],c=CH[s];
 return d('l',ic(R[r]||'user')+(b?`<b class="${b[1]}" title="${b[0]}">${b[0][0]}</b>`:'')+`<span>${e(t)}${z?`<small>${ic('lock')}${e(z)}</small>`:''}</span>`+(c?`<small class="${c[1]}">${c[0]}</small>`:''))},
 card=()=>{const x=sh[st],K=x?.knopka;
-return d('tp',d('tt',e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.length>1?d('pn',sh.map((y,i)=>`<button data-a=s data-i=${i}${i==st?' class=bn':''}>${y.s=='da'?'✓':i+1}</button>`).join('')):''))+
+return d('tp',d('tt',(vs.po?PI:'')+e(vs.n)+`<small>${e(x?.n||'делаю')}</small>`)+(sh.length>1?d('pn',sh.map((y,i)=>`<button data-a=s data-i=${i}${i==st?' class=bn':''}>${y.s=='da'?'✓':i+1}</button>`).join('')):''))+
 d('sb',ln('flag',vs.it)+(x?(x.opus?row(['opus','opus',x.opus]):'')+(x.lyudi||[]).map(l=>row(l?.map&&l[0]&&!T[l[1]]?['','',l[0]+': '+l[1],l[2],l[3]]:lc(l))).join('')+ln('arrows-split',x.res)+ln('arrow-right',x.dalshe)+(K?bt('k','player-play',N[st]||tk(K)||'Делай',tk(K,'prompt')||tk(K)||'делай',N[st]):''):''))},
 nd=(v,i)=>{const c=`<b class="c ${v==vs?'sey':''}">${ic({da:'check',sey:'circle-dot',zhdet:'hand-stop'}[v.s]||(i==V.length-1?'flag':''))}</b>`;
-return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',e(v.n))+d('x',e(v.it))))},
+return v==vs?d('u w',c+d('cd',card())):d('u '+(v.s||''),c+d('pl',d('h',(v.po?PI:'')+e(v.n))+d('x',e(v.it)+(v.po?v.pr?d('pr da',ic('circle-check')+`<span title="${e(v.pr)}">проверено: ${e(v.pr)}</span>`):v.s=='da'?d('pr zhdet',ic('clipboard-list')+'<span>в проверку</span>'):'':''))))},
 dl=ln('arrow-right',M.dalshe),C=tk(o.zapustit),P=tk(o.kopirovat),KD=o.kuda||o.kopirovat?.kuda,KB=Ls(o.knopki||o.knopka),SM=String(o.smotri??'').trim(),NC=/^нечего/i.test(SM),
 sw=SM?d('ln sw'+(NC?' nc':''),ic('eye')+`<span>${NC?e(SM.replace(/^нечего(\s+смотреть)?/i,'смотреть нечего')):`<b>Смотри:</b> ${e(SM)}`}</span>`):KB.length?d('er','не сказано, что смотреть: где на странице и было → стало (поле smotri)'):'',
 ot=o?d('ot',ln('user','от тебя')+sw+d('ch',e(o.chto||o.tekst||o.vopros))+(C?d('kop',d('km',e(C))+bt('run','player-play','Запустить','запускай: '+C)):'')+
@@ -29,19 +31,20 @@ const PY=M.priyomka,PV=[['rabotaet','Работает'],['nravitsya','Нрави
 pk=PY?d('pk',ln('clipboard-check','Моя приёмка')+PV.filter(x=>x[2]).map(([k,t,v])=>d('pq'+(k=='slaboe'?' sl':''),`<b>${t}</b><span>${e(v)}</span>`)).join('')+(PM?d('er','в приёмке нет: '+PM):'')):SM&&!NC?d('er','нет приёмки: что сам проверил, нравится ли, слабое место, не костыль, везде (поле priyomka)'):'';
 const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записана — поле zadacha',
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
-er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
-F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+(BY.length?d('bs',BY.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
+ec=PE.length&&(V.every(v=>v.s=='da')||V.some(v=>!v.po&&v.s=='da'&&/^\s*проверено/i.test(v.n))),
+er=(nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'')+(ec?d('er','по ходу не проверено: '+PE.map(v=>`«${e(v.n)}»`).join(', ')+' — проверь и впиши, чем проверено (pr)'):''),
+F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):'')+(PH.length?ln('clipboard-list',`в проверку: ${V.length-PH.length} по плану · ${PH.length} по ходу, проверено ${PH.length-PE.length}`):''))+(BY.length?d('bs',BY.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
 ci=vs?V.indexOf(vs):V.findIndex(v=>v.s=='zhdet'),cu=V[ci],nz=V.filter(v=>v.s=='da').length,fin=V.length>0&&nz==V.length,cn=ci<0?V.findIndex(v=>!v.s):ci,
 pd=V.findLastIndex((v,i)=>v.s=='da'&&i<(cn<0?V.length:cn)),nx=V.findIndex((v,i)=>!v.s&&i>cn),r=V.findIndex(v=>v.s!='da'),fa=(r<0?V.length:r)-1,
 gm=w=>{const f=w&&fa>1&&w/(V.length+2)<26?fa:0,s=f&&f-1,c=w?w/(V.length+2-s):99,h=(ci+1-s+.5)*c;
 return[f,c<24?Math.max(5,Math.min(14,~~(c-6))):Math.min(24,~~(c-8)),Math.ceil(19/c),ci<0||!w?0:h<22?~~(22-h):w-h<32?~~(w-h-32):0,c]},
-sk=w=>{const[f,z,m,x,c]=gm(w),lb=k=>k==ci+1||k%m==0&&Math.abs(k-ci-1)>=m,U=[['da','player-play','','старт'],...f?[['da','check','1–'+f,V.slice(0,f).map(v=>v.n).join('\n')]]:[],...V.slice(f).map((v,i)=>[e(v.s),{da:'check',sey:'circle-dot',zhdet:'player-pause'}[v.s],lb(i+f+1)?i+f+1:'',v.n,i+f==ci]),[fin?'da':'','flag','','цель']];
-return`<div class="qs${ci<0?' np':''}${z<16?' sm':''}" data-k=${[f,z,m,x]} style="--n:${U.length};--z:${z}px;--g:${z<16?1:2}px">`+U.map(([s,i,n,t,p])=>`<div class="qu ${s}" title="${e(t)}">${p?`<div class=qp${x?` style="left:calc(50% + ${x}px)"`:''}>ты здесь</div>`:''}${d('c',i?ic(i):'')}${d('qm',n)}</div>`).join('')+'</div>'},
+sk=w=>{const[f,z,m,x,c]=gm(w),kp=V.slice(0,f).filter(v=>v.po).length,lp=f-kp,lb=k=>k==ci+1||k%m==0&&Math.abs(k-ci-1)>=m,U=[['da','player-play','','старт'],...f?[['da','check',(lp?lp>1?'1–'+lp:'1':'')+(kp?(lp?'<br>+':'+1–+')+kp:''),V.slice(0,f).map(v=>(v.po?'по ходу: ':'')+v.n).join('\n')]]:[],...V.slice(f).map((v,i)=>[e(v.s),{da:'check',sey:'circle-dot',zhdet:'player-pause'}[v.s],lb(i+f+1)?NL[i+f]:'',(v.po?'по ходу: ':'')+v.n,i+f==ci,v.po]),[fin?'da':'','flag','','цель']];
+return`<div class="qs${ci<0?' np':''}${z<16?' sm':''}" data-k=${[f,z,m,x]} style="--n:${U.length};--z:${z}px;--g:${z<16?1:2}px">`+U.map(([s,i,n,t,p,q])=>`<div class="qu ${s}${q?' p':''}" title="${e(t)}">${p?`<div class=qp${x?` style="left:calc(50% + ${x}px)"`:''}>ты здесь</div>`:''}${d('c',i?ic(i):'')}${d('qm',n)}</div>`).join('')+'</div>'},
 tl=(c,i,t,n,x)=>d('qt '+c,`<small>${ic(i)}${t}</small>`+(n?`<b>${e(n)}</b>`:'')+(x?d('qx',e(x)):'')),
 pl=M.puls&&d('mc pu',d('mt',ic('activity')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+ln('corner-down-right',M.podzadacha)+(M.lyudi||[]).map(l=>row(lc(l))).join('')+(M.prosnus?ln('alarm','проснусь сам в '+M.prosnus):d('er','пульс без будильника — prosnus: ЧЧ:ММ'))),
-mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${Z?e(Z):zt}">${zt}</span>`+(V.length?`<b class=mn>${nz}<small>/${V.length}</small></b>`:''))+(V.length?sk((mr.clientWidth||28)-28)+er+d('q3',fin?tl('da','circle-check',`готово: все ${nz} частей`):(pd<0?tl('','check','пока ничего не сделано'):tl('da','check','сделано · '+(pd+1),V[pd].n,V[pd].it))+
-(cu?cu.s=='sey'?tl('sey','circle-dot','сейчас · '+(ci+1),cu.n,sh.length?`шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:M.seychas||cu.it):tl('zhdet','player-pause','ждёт тебя · '+(ci+1),cu.n,cu.it):cn<0?'':tl('','arrow-right','дальше · '+(cn+1),V[cn].n))+
-(nx<0?tl('','arrow-right','дальше · цель'):tl('','arrow-right','дальше · '+(nx+1),V[nx].n,V.length-nx-1?`потом ещё ${V.length-nx-1} и цель`:'потом цель'))):'')+tg(!1)),
+PJ=ec?PE:PH.filter(v=>v.s=='da'&&!v.pr),mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${Z?e(Z):zt}">${zt}</span>`+(V.length?`<b class=mn>${nz}<small>/${V.length}</small></b>`:'')+(PH.length?d('po',ic('corner-down-right')+`по ходу ${PH.length}`+(PJ.length?` · в проверку ${PJ.length}`:'')):''))+(V.length?sk((mr.clientWidth||28)-28)+er+d('q3',fin?tl('da','circle-check',`готово: все ${nz} частей`):(pd<0?tl('','check','пока ничего не сделано'):tl('da','check','сделано · '+NL[pd],V[pd].n,V[pd].it))+
+(cu?cu.s=='sey'?tl('sey','circle-dot','сейчас · '+NL[ci],cu.n,sh.length?`шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:M.seychas||cu.it):tl('zhdet','player-pause','ждёт тебя · '+NL[ci],cu.n,cu.it):cn<0?'':tl('','arrow-right','дальше · '+NL[cn],V[cn].n))+
+(nx<0?tl('','arrow-right','дальше · цель'):tl('','arrow-right','дальше · '+NL[nx],V[nx].n,V.length-nx-1?`потом ещё ${V.length-nx-1} и цель`:'потом цель'))):'')+tg(!1)),
 MS=`
 .mc{grid-template-columns:minmax(0,1fr) auto;gap:10px 8px;padding:12px 14px;line-height:1.35}
 .qs,.q3,.mc>.er{grid-column:1/-1}
@@ -82,7 +85,18 @@ MS=`
 .qt:not(.sey):not(.zhdet){display:flex;align-items:center;gap:8px;padding:6px 10px}
 .qt:not(.sey):not(.zhdet)>.qx{display:none}
 .qt:not(.sey):not(.zhdet)>b{-webkit-line-clamp:1}
-}`;
+}`,
+PS=`
+.po{display:flex;flex:none;align-items:center;gap:3px;width:max-content;padding:0 7px;border-radius:999px;font-size:11px;font-weight:400;line-height:16px;background:var(--surface-2);color:var(--text-secondary);border:.5px solid var(--border-strong)}
+.po i{margin:0;font-size:12px}
+.h>.po,.tt>.po{margin-bottom:4px}
+.pr{display:flex;gap:5px;margin-top:5px;padding:3px 7px;border-radius:6px;background:var(--surface-2);color:var(--c)}
+.pr.zhdet{background:var(--b)}
+.pr i{flex:none;margin-top:2px}
+.qu.p .c{border-radius:min(7px,calc(var(--z)*.3))}
+.mc:not(.pu) .mt>span{white-space:normal}
+.pr span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+@media(max-width:520px){.mt{flex-wrap:wrap;row-gap:4px}.mt>span{flex-basis:60%}.mt>.po{margin-left:24px}}`;
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
 #mr *{box-sizing:border-box}
@@ -162,7 +176,7 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 @container (max-width:380px){.pq{grid-template-columns:minmax(0,1fr)}.pq+.pq{margin-top:3px}}
 .fv{display:none;gap:20px}
 .mo .fv{display:grid}
-.mo .mc{display:none}${mn&&!M.puls?MS:''}
+.mo .mc{display:none}${mn&&!M.puls?MS:''}${PH.length?PS:''}
 </style>`+(pl?pl+pk+(o?ot:''):mn?mc+(o?d('fv',F)+pk+ot:pk?d('fv',F)+pk+d('fv',ot):d('fv',F+ot))+d('fv',tg(!0)):F+pk+ot);
 const qy=()=>{const s=Q('.qs'),w=s?.clientWidth;if(w&&gm(w).slice(0,4)+''!=s.dataset.k)s.outerHTML=sk(w)},
 lay=()=>{qy();const box=Q('.pt');if(!box||!box.clientWidth)return;
