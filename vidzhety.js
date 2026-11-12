@@ -31,9 +31,58 @@ const mn=M.mini,zc=Z?'':' no',zt=Z?e(Z):'Задача Яна не записан
 tg=x=>`<button class=tg data-a=m aria-expanded=${x}>${x?'Свернуть':'Весь маршрут'}${ic('chevron-'+(x?'up':'down'))}</button>`,
 er=nS>1?d('er',`вех «делаю»: ${nS} — оставь одну`):'',
 F=d('zh',ln('target','задача')+d('zd'+zc,zt)+ln('corner-down-right',M.podzadacha&&'подзадача: '+M.podzadacha)+(M.blizko||M.zeleno!=null?d('ln bl',(M.zeleno==null?'':`<span class="zn ${M.zeleno?'da':'no'}">${ic(M.zeleno?'check':'x')}</span>`)+`<span>${e(M.blizko)}</span>`):''))+(BY.length?d('bs',BY.slice(0,2).map(([b,s])=>`<span>было</span><span>${e(b)}</span><span>стало</span><span>${e(s)}</span>`).join('')):'')+er+(V.length?d('pt',`<svg class=sv></svg>`+V.map(nd).join('')):'')+ln('tool',M.seychas&&'сейчас: '+M.seychas),
-rw=[V.length?d('sg',V.map(v=>`<i class="${e(v.s)}" title="${e(v.n)}"></i>`).join('')):'',vs?ln('circle-dot',`${vs.n??''}${sh.length?` · шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:''}`,'sey',1):'',ln('tool',M.seychas&&'сейчас: '+M.seychas,'',1)],k=rw.map(x=>!!x).lastIndexOf(!0),
+ci=vs?V.indexOf(vs):V.findIndex(v=>v.s=='zhdet'),cu=V[ci],nz=V.filter(v=>v.s=='da').length,fin=V.length>0&&nz==V.length,cn=ci<0?V.findIndex(v=>!v.s):ci,
+pd=V.findLastIndex((v,i)=>v.s=='da'&&i<(cn<0?V.length:cn)),nx=V.findIndex((v,i)=>!v.s&&i>cn),r=V.findIndex(v=>v.s!='da'),fa=(r<0?V.length:r)-1,
+gm=w=>{const f=w&&fa>1&&w/(V.length+2)<26?fa:0,s=f&&f-1,c=w?w/(V.length+2-s):99,h=(ci+1-s+.5)*c;
+return[f,c<24?Math.max(5,Math.min(14,~~(c-6))):Math.min(24,~~(c-8)),Math.ceil(19/c),ci<0||!w?0:h<22?~~(22-h):w-h<32?~~(w-h-32):0,c]},
+sk=w=>{const[f,z,m,x,c]=gm(w),lb=k=>k==ci+1||k%m==0&&Math.abs(k-ci-1)>=m,U=[['da','player-play','','старт'],...f?[['da','check','1–'+f,V.slice(0,f).map(v=>v.n).join('\n')]]:[],...V.slice(f).map((v,i)=>[e(v.s),{da:'check',sey:'circle-dot',zhdet:'player-pause'}[v.s],lb(i+f+1)?i+f+1:'',v.n,i+f==ci]),[fin?'da':'','flag','','цель']];
+return`<div class="qs${ci<0?' np':''}${z<16?' sm':''}" data-k=${[f,z,m,x]} style="--n:${U.length};--z:${z}px;--g:${z<16?1:2}px">`+U.map(([s,i,n,t,p])=>`<div class="qu ${s}" title="${e(t)}">${p?`<div class=qp${x?` style="left:calc(50% + ${x}px)"`:''}>ты здесь</div>`:''}${d('c',i?ic(i):'')}${d('qm',n)}</div>`).join('')+'</div>'},
+tl=(c,i,t,n,x)=>d('qt '+c,`<small>${ic(i)}${t}</small>`+(n?`<b>${e(n)}</b>`:'')+(x?d('qx',e(x)):'')),
 pl=M.puls&&d('mc pu',d('mt',ic('activity')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+ln('corner-down-right',M.podzadacha)+(M.lyudi||[]).map(l=>row(lc(l))).join('')+(M.prosnus?ln('alarm','проснусь сам в '+M.prosnus):d('er','пульс без будильника — prosnus: ЧЧ:ММ'))),
-mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${e(Z)}">${zt}</span>`)+rw.map((x,i)=>(i==1?er:'')+(i==k?x.replace(/<\/div>$/,tg(!1)+'</div>').replace('"','"bx '):x)).join('')+(k<0?tg(!1):''));
+mc=mn&&d('mc',d('mt',ic('target')+`<span${zc&&' class=no'} title="${Z?e(Z):zt}">${zt}</span>`+(V.length?`<b class=mn>${nz}<small>/${V.length}</small></b>`:''))+(V.length?sk((mr.clientWidth||28)-28)+er+d('q3',fin?tl('da','circle-check',`готово: все ${nz} частей`):(pd<0?tl('','check','пока ничего не сделано'):tl('da','check','сделано · '+(pd+1),V[pd].n,V[pd].it))+
+(cu?cu.s=='sey'?tl('sey','circle-dot','сейчас · '+(ci+1),cu.n,sh.length?`шаг ${st+1} из ${sh.length}${sh[st].n?' — '+sh[st].n:''}`:M.seychas||cu.it):tl('zhdet','player-pause','ждёт тебя · '+(ci+1),cu.n,cu.it):cn<0?'':tl('','arrow-right','дальше · '+(cn+1),V[cn].n))+
+(nx<0?tl('','arrow-right','дальше · цель'):tl('','arrow-right','дальше · '+(nx+1),V[nx].n,V.length-nx-1?`потом ещё ${V.length-nx-1} и цель`:'потом цель'))):'')+tg(!1)),
+MS=`
+.mc{grid-template-columns:minmax(0,1fr) auto;gap:10px 8px;padding:12px 14px;line-height:1.35}
+.qs,.q3,.mc>.er{grid-column:1/-1}
+.mc>.tg{grid-area:1/2}
+.mc .mt{font-size:14px}
+.mc .mt i{font-size:16px;color:var(--text-secondary)}
+.mc .no{white-space:normal}
+.mn{flex:none;font-size:15px}
+.mn small{font-size:12px;font-weight:400;color:var(--text-secondary)}
+.qs{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));padding-top:20px}
+.qu{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px}
+.qs.np{padding-top:0}
+.qu::after{content:"";position:absolute;top:calc(var(--z)/2 - .75px);left:calc(50% + var(--z)/2 + var(--g));right:calc(-50% + var(--z)/2 + var(--g));border-top:1.5px dashed var(--border-strong)}
+.qu.da::after{top:calc(var(--z)/2 - 1px);border-top:2px solid var(--text-success)}
+.qu:last-child::after{display:none}
+.mc .c{width:var(--z);height:var(--z);overflow:hidden;font-size:calc(var(--z)*.55)}
+.qs.sm .c i{display:none}
+.qs.sm .c{border-style:solid}
+.qs.sm .da .c,.qs.sm .sey .c,.qs.sm .zhdet .c{background:var(--c);border-color:var(--c)}
+.qu.sey .c,.qu.zhdet .c{border-width:2px;outline:3px solid var(--b)}
+.qm{font-size:11px;font-weight:400;line-height:14px;white-space:nowrap;color:var(--text-muted)}
+.qu.sey .qm,.qu.zhdet .qm{font-weight:500;color:var(--c)}
+.qp{position:absolute;top:-20px;left:50%;transform:translateX(-50%);padding:0 7px;border-radius:999px;white-space:nowrap;font-size:11px;line-height:16px;background:var(--b);color:var(--c);border:.5px solid var(--r)}
+.q3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);gap:8px}
+.qt{display:grid;gap:2px;align-content:start;min-width:0;padding:8px 10px;border-radius:10px;overflow-wrap:anywhere;border:.5px var(--d,dashed) var(--r,var(--border-strong));background:var(--b,none);color:var(--c,var(--text-secondary))}
+.qt:only-child{grid-column:1/-1}
+.qt.sey,.qt.zhdet{border-width:1.5px}
+.qt:only-child small{font-size:13px;font-weight:500}
+.qt small{display:flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap}
+.qt b,.qx{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.qt b{font-weight:500;color:var(--c,var(--text-primary))}
+.qx{font-size:12px;-webkit-line-clamp:1}
+.sey>.qx,.zhdet>.qx{-webkit-line-clamp:2}
+@media(max-width:520px){
+.mc{grid-template-columns:minmax(0,1fr)}
+.mc>.tg{grid-area:auto/1/auto/-1;justify-self:end}
+.q3{grid-template-columns:minmax(0,1fr)}
+.qt:not(.sey):not(.zhdet){display:flex;align-items:center;gap:8px;padding:6px 10px}
+.qt:not(.sey):not(.zhdet)>.qx{display:none}
+.qt:not(.sey):not(.zhdet)>b{-webkit-line-clamp:1}
+}`;
 mr.innerHTML=`<style>
 #mr{display:grid;gap:20px;font-size:13px;line-height:1.4}
 #mr *{box-sizing:border-box}
@@ -113,9 +162,10 @@ ${['da:success','sey:accent','zhdet:warning'].map(x=>{const[k,t]=x.split(':');re
 @container (max-width:380px){.pq{grid-template-columns:minmax(0,1fr)}.pq+.pq{margin-top:3px}}
 .fv{display:none;gap:20px}
 .mo .fv{display:grid}
-.mo .mc{display:none}
+.mo .mc{display:none}${mn&&!M.puls?MS:''}
 </style>`+(pl?pl+pk+(o?ot:''):mn?mc+(o?d('fv',F)+pk+ot:pk?d('fv',F)+pk+d('fv',ot):d('fv',F+ot))+d('fv',tg(!0)):F+pk+ot);
-const lay=()=>{const box=Q('.pt');if(!box||!box.clientWidth)return;
+const qy=()=>{const s=Q('.qs'),w=s?.clientWidth;if(w&&gm(w).slice(0,4)+''!=s.dataset.k)s.outerHTML=sk(w)},
+lay=()=>{qy();const box=Q('.pt');if(!box||!box.clientWidth)return;
 const U=A('.u',box),k=Math.min(3,U.length,~~((box.clientWidth-28)/150)||1);
 box.style.setProperty('--k',k);
 let r=1,c=0,f=1;
@@ -132,7 +182,7 @@ if(Date.now()-(b.t||0)<1500)return;b.t=Date.now();
 const t=b.dataset.t,fin=(x,v)=>{b.classList.add('ok');b.lastChild.textContent=x;if(a=='k'&&!v)N[st]=x};
 if(window.sendPrompt){setTimeout(()=>sendPrompt(t),300);return fin('Нажато ✓ — не дошло? Нажми ещё раз')}
 vy(b,t,fin)};
-lay();D.fonts?.ready.then(lay);const pt=Q('.pt');window.ResizeObserver&&pt&&new ResizeObserver(lay).observe(pt);Marshrut.lay=lay}catch(x){const m=c||document.getElementById('mr');if(m)m.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет маршрута не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
+lay();D.fonts?.ready.then(lay);const ro=window.ResizeObserver&&new ResizeObserver(lay);A('.pt,.mc').forEach(x=>ro?.observe(x));Marshrut.lay=lay}catch(x){const m=c||document.getElementById('mr');if(m)m.innerHTML='<p style="color:var(--text-danger);font-size:14px">Виджет маршрута не нарисовался: '+String(x?.message??x).replace(/[<&]/g,'')+'. Скажи чату «виджет не нарисовался» — он перерисует.</p>'}};
 window.Vybor=V=>{try{
 const D=document,vb=D.getElementById('vb'),Q=s=>vb.querySelector(s),A=s=>[...vb.querySelectorAll(s)],Ls=a=>[].concat(a??[]).filter(x=>x!=null&&x!==''),Vs=Ls(V.voprosy).map(v=>({...v,varianty:Ls(v.varianty)})),S=Vs.map(()=>[]),
 e=s=>String(s??'').replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';'),
