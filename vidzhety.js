@@ -313,11 +313,23 @@ MD={opus:['Opus','yl'],sonnet:['Sonnet','bl'],haiku:['Haiku','gr']},
 ZT={beda:['rd','alert-triangle'],da:['gr','check'],vopros:['bl','bulb']},
 nm=s=>+(String(s).replace(/\s/g,'').replace(',','.').replace('−','-').match(/-?\d+\.?\d*/)||NaN),
 vy=(b,t,f)=>{let r=b.r;if(!r){r=b.r=dc.createElement('textarea');r.className='o-rn';r.readOnly=1;r.oncopy=()=>f('Скопировано ✓ — вставь в чат (⌘V)');b.after(r)}r.value=t;r.focus();r.select();f('Выделено — нажми ⌘C')},
+nz=q=>/^[A-ZА-ЯЁ0-9]/.test(q)&&/[A-Za-zА-Яа-яЁё]/.test(q)&&!/[.!?…]$/.test(q)&&q.split(' ').length<5,
+tx=s=>String(s??'').split(/(«[^«»\n]{1,28}»)/).map((p,k)=>k%2&&nz(p.slice(1,-1))?`<span class="o-im">${e(p.slice(1,-1))}</span>`:e(p)).join(''),
+sx=h=>{if(h==null||h===''||h===false)return'';let x;const mc=(l,t,g)=>d('o-mc'+(g?' o-mg':''),`<span class="o-ml">${e(l)}</span>`+tx(t));
+if(typeof h!='object'||Array.isArray(h)){const S=Ls(h);if(!S.length)return'';x=d('o-pt',S.map(v=>`<span class="o-pc">${tx(v)}</span>`).join(ic('arrow-right','o-pa')))}
+else if(h.varianty){const V=Ls(h.varianty).slice(0,3);if(!V.length)return'';x=d('o-mv',V.map(v=>{const[n,p,s]=v&&v.constructor==Object?[v.n,v.d??v.p??v.t,v.sovet]:[].concat(v);return mc((n??'')+(s?' · мой совет':''),p,s)}).join(''))}
+else if('seychas'in h||'budet'in h)x=d('o-mb',mc('сейчас',h.seychas)+ic('arrow-right','o-pa')+mc('будет',h.budet,1));
+else if('bylo'in h||'stalo'in h)x=d('o-mb',mc('было',h.bylo)+ic('arrow-right','o-pa')+mc('стало',h.stalo,1));
+else if(h.dolya!=null){const D=[].concat(h.dolya),[n,z]=D,w=z>0?Math.max(0,Math.min(100,n/z*100))||0:0,t=h.t?' · '+tx(h.t):'';x=d('o-dl',D.length==2?`<div class="o-dk"><i style="width:${w}%"></i></div><span><b class="o-nm">${e(n)} из ${e(z)}</b>${t}</span>`:`<span>${tx(D.join(' '))}${t}</span>`)}
+else x=d('o-er','схема «'+e(Object.keys(h)[0]??'')+'» не из списка');
+return d('o-mx',x)},
 BL={
 chisla:B=>{const E=B.e||[];return`<div class="o-cs" style="--c:${cl(E.length)};--r:2">`+E.map(([t,a,b,h])=>{const p=nm(a),q=nm(b);
 return d('o-k',d('o-cp',e(t))+d('o-v o-'+(h==null||p==q||isNaN(p+q)?'bl':(q>p)==!!h?'gr':'rd'),`<span>${e(a)}</span>${ic('arrow-right')}<b>${e(b)}</b>`))}).join('')+'</div>'},
 'bylo-stalo':B=>d('o-ls o-pr',(B.e||[]).map(([a,b,h])=>d('o-bs o-'+(h==null||h?'gr':'rd'),d('o-bc',e(a))+ic('arrow-right','o-ar')+d('o-bc o-af',e(b)))).join('')),
-spisok:B=>d('o-ls',(B.e||[]).map((s,i)=>{const[t,p,c]=[].concat(s);return d('o-r '+tn(c),`<b class="o-c">${i+1}</b><div>`+d('o-t',e(t))+(p?d('o-p',e(p)):'')+'</div>')}).join('')),
+spisok:B=>d('o-ls',(B.e||[]).map((s,i)=>{const o=s&&s.constructor==Object?s:(([t,p,c])=>({t,p,ton:c}))([].concat(s));
+const P=o.p??o.d,F=v=>v===1||v===true?'':v,sv=F(o.sovet),ina=F(o.inache);
+return d('o-r '+tn(o.ton),(o.i&&!/-filled$/.test(o.i)?`<b class="o-c o-ci">${ic(o.i)}</b>`:`<b class="o-c">${i+1}</b>`)+'<div>'+d('o-t',tx(o.t??o.n))+(P?d('o-p',tx(P)):'')+sx(o.sh)+(sv?d('o-sv',ic('thumb-up')+`<span><b>Мой совет</b> — ${tx(sv)}</span>`):'')+(ina?d('o-in',ic('corner-down-right')+`<span>Если иначе: ${tx(ina)}</span>`):'')+'</div>')}).join('')),
 'vybor-puti':B=>{const V=(B.e||[]).slice(0,3),h=k=>V.some(v=>v[k]),
 pm=(v,k,c)=>h(k)?d('o-ln '+c,(v[k]?ic(k):'')+`<span>${e(v[k])}</span>`):'';
 return`<div class="o-cs" style="--c:${cl(V.length)};--r:${1+h('d')+h('plus')+h('minus')+h('knopka')}${h('sovet')?';padding-top:10px':''}">`+V.map(v=>d('o-k'+(v.sovet?' o-s':''),(v.sovet?`<span class="o-bd">${ic('thumb-up')}советую</span>`:'')+d('o-t',e(v.n))+(h('d')?d('',e(v.d)):'')+pm(v,'plus','o-gr')+pm(v,'minus','o-rd')+(v.knopka?bt(v.knopka.tekst||v.knopka,v.knopka.prompt||v.prompt,v.sovet?'':'o-q'):''))).join('')+'</div>'},
@@ -353,6 +365,28 @@ ot.innerHTML=`<style>
 .o-ln i{flex:none;margin-top:2px;color:var(--c,var(--text-secondary))}
 .o-ln span,.o-r>div{flex:1;min-width:0}
 .o-r>div{margin-top:2px}
+.o-im{white-space:nowrap;padding:0 5px;border-radius:5px;background:var(--surface-2);box-shadow:inset 0 0 0 .5px var(--border-strong);color:var(--text-primary)}
+.o-nm{font-weight:500;color:var(--text-primary)}
+.o-ci{font-size:13px}
+.o-mx{margin-top:8px}
+.o-pt{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.o-pc{min-width:0;overflow-wrap:anywhere;padding:3px 8px;border-radius:6px;background:var(--surface-2);box-shadow:inset 0 0 0 .5px var(--border-strong);color:var(--text-primary);font-size:12px;line-height:16px}
+.o-pa{flex:none;color:var(--text-muted)}
+.o-mb{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center}
+.o-mv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.o-mc{min-width:0;align-self:stretch;padding:7px 9px;border-radius:8px;background:var(--surface-2);box-shadow:inset 0 0 0 .5px var(--border-strong);color:var(--text-secondary);font-size:12px;line-height:16px}
+.o-mg{box-shadow:inset 0 0 0 1.5px var(--border-success)}
+.o-ml{display:block;font-size:11px;color:var(--text-muted);margin-bottom:2px}
+.o-mg .o-ml{color:var(--text-success)}
+.o-dl{display:flex;gap:8px;align-items:center;color:var(--text-secondary)}
+.o-dk{flex:0 1 120px;min-width:48px;height:6px;border-radius:3px;background:var(--surface-2);box-shadow:inset 0 0 0 .5px var(--border-strong);overflow:hidden}
+.o-dk i{display:block;height:100%;background:var(--c,var(--fill-accent))}
+.o-sv{display:flex;gap:6px;align-items:start;margin-top:8px;padding:7px 9px;border-radius:8px;background:var(--bg-success);color:var(--text-success)}
+.o-sv b{font-weight:500}
+.o-in{display:flex;gap:6px;align-items:start;margin-top:6px;color:var(--text-muted);font-size:12px}
+.o-sv i,.o-in i{flex:none;margin-top:2px}
+.o-sv>span,.o-in>span,.o-dl>span{flex:1;min-width:0}
+.o-mc .o-im,.o-pc .o-im{white-space:normal}
 .o-sl{color:var(--c,var(--text-secondary))}
 .o-st{display:flex;gap:6px;align-items:center}
 .o-sh{column-gap:28px}
@@ -372,7 +406,7 @@ ot.innerHTML=`<style>
 .o-rn{width:100%;min-height:56px}
 .o-er{padding:10px 12px;border-radius:var(--radius);background:var(--bg-danger);color:var(--text-danger);font-weight:500}
 ${['gr:success','rd:danger','yl:warning','bl:accent'].map(x=>{const[k,t]=x.split(':');return`.o-${k}{--c:var(--text-${t});--b:var(--bg-${t})}`}).join('\n')}
-@container (max-width:460px){.o-z{font-size:18px}.o-bs{grid-template-columns:1fr}.o-bs>.o-ar{transform:rotate(90deg);justify-self:center}}
+@container (max-width:460px){.o-z{font-size:18px}.o-mb{grid-template-columns:minmax(0,1fr)}.o-mb>.o-pa{transform:rotate(90deg);justify-self:center}.o-bs{grid-template-columns:1fr}.o-bs>.o-ar{transform:rotate(90deg);justify-self:center}}
 @container (max-width:559px){.o-cs{grid-template-columns:minmax(0,1fr)}.o-sh{row-gap:28px}.o-k>.o-ar{left:calc(50% - 14px);top:-30px;transform:rotate(90deg)}.o-f>.o-ar{display:grid}}
 </style>`+(D.zag?d('o-z',(Z?`<span class="o-zn o-${Z[0]}">${ic(Z[1])}</span>`:'')+`<span>${e(D.zag)}</span>`):'')+Ls(D.bloki).filter(Boolean).map(bk).join('');
 ot.role='region';ot.lang='ru';ot.ariaLabel=D.zag||'Ответ';
