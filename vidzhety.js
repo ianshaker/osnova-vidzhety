@@ -335,7 +335,24 @@ pm=(v,k,c)=>h(k)?d('o-ln '+c,(v[k]?ic(k):'')+`<span>${e(v[k])}</span>`):'';
 return`<div class="o-cs" style="--c:${cl(V.length)};--r:${1+h('d')+h('plus')+h('minus')+h('knopka')}${h('sovet')?';padding-top:10px':''}">`+V.map(v=>d('o-k'+(v.sovet?' o-s':''),(v.sovet?`<span class="o-bd">${ic('thumb-up')}советую</span>`:'')+d('o-t',e(v.n))+(h('d')?d('',e(v.d)):'')+pm(v,'plus','o-gr')+pm(v,'minus','o-rd')+(v.knopka?bt(v.knopka.tekst||v.knopka,v.knopka.prompt||v.prompt,v.sovet?'':'o-q'):''))).join('')+'</div>'},
 shagi:B=>{const S=(B.e||[]).map(s=>[].concat(s)),h=S.some(s=>s[1]),c=cl(S.length);
 return`<div class="o-cs o-sh" style="--c:${c};--r:${2+h}">`+S.map(([t,p,m],i)=>d('o-k'+(i%c?'':' o-f'),(i?ic('arrow-right','o-ar'):'')+d('o-st',`<b class="o-c">${i+1}</b>`+(MD[m]?`<b class="o-md o-${MD[m][1]}" title="${MD[m][0]}">${MD[m][0][0]}</b>`:''))+d('o-t',e(t))+(h?d('',e(p)):''))).join('')+'</div>'},
-stroka:B=>ln(B.i||'info-circle',B.t,tn(B.ton))
+stroka:B=>ln(B.i||'info-circle',B.t,tn(B.ton)),
+reshenie:B=>{const L=Ls(B.luchshe).slice(0,2),
+hd=(i,t,c)=>d('o-ph '+c,`<b class="o-pi">${ic(i)}</b><span>${t}</span>`),
+lb=(i,t,x,c)=>x?d('o-ln '+c,ic(i)+`<span><b class="o-nm">${t}</b> ${tx(x)}</span>`):'',
+pr=B.pravilno?d('o-sx',tx(B.pravilno)):'',nk=B.ne_kostyl?d('o-sx',tx(B.ne_kostyl)):'',
+lu=L.length?d('o-sx',L.map(v=>{const[n,p]=[].concat(v);return d('o-ot',ic('x')+`<span><b>${tx(n)}</b>${p?' — '+tx(p):''}</span>`)}).join('')):'',
+k=[pr,nk,lu].filter(Boolean).length,
+pv=String(B.proveril??'').trim(),nv=/^не\s+(провер|смотр)/i.test(pv)?pv.includes(':')&&pv.slice(pv.indexOf(':')+1).trim()||pv:'',
+st=(t,c,x)=>d('o-st2'+(x?'':' o-no'),d('o-sh2',`<b class="o-ok2">${x?ic('check'):'?'}</b><span><b>${t}</b><small>${c}</small></span>`)+(x||'<span class="o-nd">не доказано</span>'));
+return d('o-rs',d('o-pl',hd('alert-circle','Проблема','o-hp')+(B.problema?d('o-pz',tx(B.problema)):d('o-er','нет проблемы'))+sx(B.psh)+lb('flame','Чем грозит:',B.grozit,'o-cn'))
++d('o-ay',ic('arrow-down'))
++d('o-pl o-pr2',hd('bulb','Решение','o-hr')+(B.reshenie?d('o-pz',tx(B.reshenie)):d('o-er','нет решения'))
++(B.sh&&B.sh.varianty?d('o-er','в решении — одно решение, варианты только на вкус'):sx(B.sh&&Object.keys(B.sh).length?B.sh:'')||d('o-er','нет схемы решения'))
++d('o-pf',d('o-pq2',`<span>Почему это лучшее</span><b class="o-sc${k<3?' o-sc-w':''}">${k} из 3 доказано</b>`)
++d('o-sg',st('Правильное','лечит причину, а не прячет',pr)+st('Не костыль','без обходов, выдержит рост',nk)+st('Лучше других','сравнил с другими путями',lu))
++(nv?d('o-ln o-pv o-pv-n',ic('alert-circle')+`<span>Не проверено: ${tx(nv)}</span>`):B.proveril?lb('clipboard-check','Проверил:',B.proveril,'o-pv'):d('o-ln o-pv o-pv-n',ic('alert-circle')+'<span>Не проверено — доводы на словах</span>')))
++lb('info-circle','Исхожу из:',B.ishozhu,'o-cn')+lb('coin','Цена:',B.cena,'o-cn')
++d('o-ac',(B.knopka?bt(B.knopka,B.prompt):'')+d('o-ln o-nt',ic('pencil')+'<span>Не так — напиши словами, что поменять: пришлю новое решение</span>'))))}
 },
 bk=B=>{const k=B.b||B.tip||Object.keys(BL).find(x=>B[x]),X={...B,b:k,e:Ls(B.b?B.e:B.e||B[k]||B.strok||B.punkty||B.stroki)};
 return d('o-bk',(X.n?d('o-n',e(X.n)):'')+(BL[X.b]?BL[X.b](X):d('o-er','блок «'+e(X.b)+'» не из списка')))},
@@ -405,9 +422,51 @@ ot.innerHTML=`<style>
 .o-b.o-ok{background:var(--fill-success);color:var(--on-success);border-color:transparent}
 .o-rn{width:100%;min-height:56px}
 .o-er{padding:10px 12px;border-radius:var(--radius);background:var(--bg-danger);color:var(--text-danger);font-weight:500}
+.o-rs{display:grid}
+.o-pl{display:grid;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:var(--surface-2);box-shadow:0 0 0 1px color-mix(in srgb,var(--border-strong) 45%,transparent),0 1px 3px color-mix(in srgb,var(--text-primary) 6%,transparent)}
+.o-pr2{box-shadow:0 0 0 1.5px var(--border-accent),0 6px 18px color-mix(in srgb,var(--fill-accent) 12%,transparent)}
+.o-pl .o-mx{margin-top:0}
+.o-pl .o-er{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--text-danger)}
+.o-ph{display:flex;gap:8px;align-items:center;font-size:12.5px;line-height:16px;font-weight:600;color:var(--text-secondary)}
+.o-pi{display:grid;place-items:center;flex:none;width:26px;height:26px;border-radius:8px;font-size:15px}
+.o-hp .o-pi{background:var(--bg-danger);color:var(--text-danger)}
+.o-hr{color:var(--text-accent)}
+.o-hr .o-pi{background:var(--bg-accent);color:var(--text-accent)}
+.o-pz{font-size:16px;line-height:23px;font-weight:600;color:var(--text-primary)}
+.o-pl .o-pc,.o-pl .o-mc{background:var(--surface-1);box-shadow:none}
+.o-pr2 .o-mg{background:var(--surface-2);box-shadow:inset 0 0 0 1.5px var(--border-accent)}
+.o-pr2 .o-mg .o-ml{color:var(--text-accent)}
+.o-ay{display:grid;place-items:center;height:30px}
+.o-ay i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);box-shadow:0 0 0 1px color-mix(in srgb,var(--border-strong) 45%,transparent);color:var(--text-muted);font-size:13px}
+.o-pf{display:grid;gap:8px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--border-strong) 35%,transparent)}
+.o-pq2{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;line-height:18px;font-weight:600;color:var(--text-primary)}
+.o-sc{flex:none;padding:2px 9px;border-radius:999px;background:var(--bg-accent);color:var(--text-accent);font-size:11.5px;line-height:16px;font-weight:600}
+.o-sc-w{background:var(--bg-warning);color:var(--text-warning)}
+.o-sg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.o-st2{display:grid;grid-row:span 2;grid-template-rows:subgrid;align-content:start;row-gap:6px;min-width:0;padding:10px 11px;border-radius:10px;background:var(--surface-1)}
+.o-sh2{display:flex;gap:8px;align-items:start}
+.o-sh2>span{display:grid;min-width:0}
+.o-sh2 b{font-weight:600;font-size:13px;line-height:17px;color:var(--text-primary)}
+.o-sh2 small{font-size:11.5px;line-height:15px;color:var(--text-muted)}
+.o-sh2 .o-ok2{display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:50%;background:var(--fill-accent);color:var(--on-accent);font-size:12px}
+.o-no .o-ok2{background:none;box-shadow:inset 0 0 0 1.5px var(--border-strong);color:var(--text-muted)}
+.o-sx{display:grid;gap:4px;font-size:12.5px;line-height:17px;color:var(--text-secondary)}
+.o-nd{font-size:12px;line-height:16px;color:var(--text-warning)}
+.o-ot{display:flex;gap:5px;align-items:start}
+.o-ot i{flex:none;margin-top:2px;color:var(--text-danger)}
+.o-ot>span{flex:1;min-width:0}
+.o-ot b{font-weight:500;color:var(--text-primary)}
+.o-pv{--c:var(--text-accent);font-size:12.5px;line-height:17px}
+.o-pv-n{--c:var(--text-warning);color:var(--text-warning)}
+.o-cn{--c:var(--text-secondary)}
+.o-ac{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.o-ac>.o-bw{align-self:center}
+.o-nt{--c:var(--text-secondary);flex:1 1 220px;font-size:12px;line-height:16px}
 ${['gr:success','rd:danger','yl:warning','bl:accent'].map(x=>{const[k,t]=x.split(':');return`.o-${k}{--c:var(--text-${t});--b:var(--bg-${t})}`}).join('\n')}
 @container (max-width:460px){.o-z{font-size:18px}.o-mb{grid-template-columns:minmax(0,1fr)}.o-mb>.o-pa{transform:rotate(90deg);justify-self:center}.o-bs{grid-template-columns:1fr}.o-bs>.o-ar{transform:rotate(90deg);justify-self:center}}
 @container (max-width:559px){.o-cs{grid-template-columns:minmax(0,1fr)}.o-sh{row-gap:28px}.o-k>.o-ar{left:calc(50% - 14px);top:-30px;transform:rotate(90deg)}.o-f>.o-ar{display:grid}}
+@container (max-width:520px){.o-sg{grid-template-columns:minmax(0,1fr)}}
+@container (max-width:460px){.o-ac{flex-direction:column;align-items:flex-start}.o-ac>.o-bw{align-self:flex-start}.o-nt{flex:none}}
 </style>`+(D.zag?d('o-z',(Z?`<span class="o-zn o-${Z[0]}">${ic(Z[1])}</span>`:'')+`<span>${e(D.zag)}</span>`):'')+Ls(D.bloki).filter(Boolean).map(bk).join('');
 ot.role='region';ot.lang='ru';ot.ariaLabel=D.zag||'Ответ';
 ot.onclick=async ev=>{const b=ev.target.closest('[data-a]');if(!b)return;
