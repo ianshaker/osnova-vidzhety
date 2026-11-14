@@ -342,12 +342,14 @@ lb=(i,t,x,c)=>x?d('o-ln '+c,ic(i)+`<span><b class="o-nm">${t}</b> ${tx(x)}</span
 pr=B.pravilno?d('o-sx',tx(B.pravilno)):'',nk=B.ne_kostyl?d('o-sx',tx(B.ne_kostyl)):'',
 lu=L.length?d('o-sx',L.map(v=>{const[n,p]=[].concat(v);return d('o-ot',ic('x')+`<span><b>${tx(n)}</b>${p?' — '+tx(p):''}</span>`)}).join('')):'',
 k=[pr,nk,lu].filter(Boolean).length,
+M=Ls(B.menyayu).slice(0,5).map(v=>{const[g,c]=v&&v.constructor==Object?[v.gde,v.chto]:[].concat(v);return g&&c?`<b class="o-nm">${tx(g)}</b> — ${tx(c)}`:tx(g||c)}).filter(Boolean),
 pv=String(B.proveril??'').trim(),nv=/^не\s+(провер|смотр)/i.test(pv)?pv.includes(':')&&pv.slice(pv.indexOf(':')+1).trim()||pv:'',
 st=(t,c,x)=>d('o-st2'+(x?'':' o-no'),d('o-sh2',`<b class="o-ok2">${x?ic('check'):'?'}</b><span><b>${t}</b><small>${c}</small></span>`)+(x||'<span class="o-nd">не доказано</span>'));
 return d('o-rs',d('o-pl',hd('alert-circle','Проблема','o-hp')+(B.problema?d('o-pz',tx(B.problema)):d('o-er','нет проблемы'))+sx(B.psh)+lb('flame','Чем грозит:',B.grozit,'o-cn'))
 +d('o-ay',ic('arrow-down'))
 +d('o-pl o-pr2',hd('bulb','Решение','o-hr')+(B.reshenie?d('o-pz',tx(B.reshenie)):d('o-er','нет решения'))
 +(B.sh&&B.sh.varianty?d('o-er','в решении — одно решение, варианты только на вкус'):sx(B.sh&&Object.keys(B.sh).length?B.sh:'')||d('o-er','нет схемы решения'))
++(M.length?d('o-me',d('o-pq2','Что меняю')+M.map(s=>d('o-ln o-mi',ic('pencil')+`<span>${s}</span>`)).join('')):B.knopka?d('o-er','нет «Что меняю» — где и что правишь'):'')
 +d('o-pf',d('o-pq2',`<span>Почему это лучшее</span><b class="o-sc${k<3?' o-sc-w':''}">${k} из 3 доказано</b>`)
 +d('o-sg',st('Правильное','лечит причину, а не прячет',pr)+st('Не костыль','без обходов, выдержит рост',nk)+st('Лучше других','сравнил с другими путями',lu))
 +(nv?d('o-ln o-pv o-pv-n',ic('alert-circle')+`<span>Не проверено: ${tx(nv)}</span>`):B.proveril?lb('clipboard-check','Проверил:',B.proveril,'o-pv'):d('o-ln o-pv o-pv-n',ic('alert-circle')+'<span>Не проверено — доводы на словах</span>')))
@@ -462,6 +464,8 @@ ot.innerHTML=`<style>
 .o-ac{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
 .o-ac>.o-bw{align-self:center}
 .o-nt{--c:var(--text-secondary);flex:1 1 220px;font-size:12px;line-height:16px}
+.o-me{display:grid;gap:7px}
+.o-mi{--c:var(--text-accent);font-size:12.5px;line-height:17px}
 ${['gr:success','rd:danger','yl:warning','bl:accent'].map(x=>{const[k,t]=x.split(':');return`.o-${k}{--c:var(--text-${t});--b:var(--bg-${t})}`}).join('\n')}
 @container (max-width:460px){.o-z{font-size:18px}.o-mb{grid-template-columns:minmax(0,1fr)}.o-mb>.o-pa{transform:rotate(90deg);justify-self:center}.o-bs{grid-template-columns:1fr}.o-bs>.o-ar{transform:rotate(90deg);justify-self:center}}
 @container (max-width:559px){.o-cs{grid-template-columns:minmax(0,1fr)}.o-sh{row-gap:28px}.o-k>.o-ar{left:calc(50% - 14px);top:-30px;transform:rotate(90deg)}.o-f>.o-ar{display:grid}}
